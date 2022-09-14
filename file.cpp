@@ -33,6 +33,7 @@ int main()
 	    {
 	      srand(time(NULL));
 	      randint = rand() % 100;
+	      count = 0;
 	    }
 	  // if no then stop while loop
 	  else
