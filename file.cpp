@@ -1,3 +1,6 @@
+//Aidan Gao
+//Guessing game
+//Last edited: 9/14/22
 #include <iostream>
 
 using namespace std;
