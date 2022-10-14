@@ -33,7 +33,7 @@ int main()
   
     while(stillplaying == true)
       {
-        // checking if the inputs are good
+        // checking if the input is okay
         printboard(board); 
         cout << "Please enter a letter followed by a number:" << endl;
         cin >> input;
@@ -149,7 +149,7 @@ int main()
       }
     return 0;
   }
-  // prints board layer by layer
+  // gets inputs from board then prints board layer by layer
 void printboard(char board[3][3])
 {
   char letter;
