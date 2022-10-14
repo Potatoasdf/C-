@@ -29,7 +29,7 @@ int main()
             board[i][j] = ' ';
           }
   
-      }
+      } 
   
     while(stillplaying == true)
       {
