@@ -23,13 +23,11 @@ void print(vector<student*> &holder);
 
 int main() {
   vector<student*> holder;
-  cout << holder.size() << endl;
   bool alive = true;
   //while alive
   while (alive)
     {
       //get input
-      cout << holder.size() << endl;
       char input[10];  
       cout << "Enter ADD, PRINT, DELETE, or QUIT: " << endl;
       cin >> input;
@@ -42,12 +40,10 @@ int main() {
       else if(strcmp(input, "ADD") == 0)
       {
         add(holder);
-	cout << holder[0]->firstname << endl;
       }
       //if input is PRINT start void print
       else if( strcmp(input, "PRINT") == 0)
       {
-	cout << holder[0]->firstname << endl;
         print(holder);
       }
       //if input is DELETE start void delete
@@ -78,7 +74,6 @@ void add(vector<student*> &holder)
   cin >> studentADD->gpa;
   //put in vector
   holder.push_back(studentADD);
-  cout << holder[0]->firstname << endl;
 }
 
 void del(vector<student*> &holder)
