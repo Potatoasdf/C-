@@ -1,9 +1,8 @@
-/* 
+/*
 Project: Student List
 By: Aidan Gao
 Last worked on: 11/5/2022
 */
-#include <cmath>
 #include <vector>
 #include <iostream>
 #include <cstring>
@@ -29,11 +28,11 @@ int main() {
   while (alive)
     {
       //get input
-      char input[10];  
+      char input[10];
       cout << "Enter ADD, PRINT, DELETE, or QUIT: " << endl;
       cin >> input;
       //if input is QUIT then stop program
-      if( strcmp(input, "QUIT") == 0) 
+      if( strcmp(input, "QUIT") == 0)
       {
         alive = false;
       }
@@ -41,12 +40,10 @@ int main() {
       else if(strcmp(input, "ADD") == 0)
       {
         add(holder);
-	
       }
       //if input is PRINT start void print
       else if( strcmp(input, "PRINT") == 0)
       {
-	
         print(holder);
       }
       //if input is DELETE start void delete
@@ -55,7 +52,7 @@ int main() {
         del(holder);
       }
       //if input isnt good
-      else 
+      else
       {
         cout << "Please enter an actual input!" << endl;
       }
@@ -66,21 +63,17 @@ int main() {
 void add(vector<student*> &holder)
 {
   //gets all the inputs
-  float rounder = 0;
   student* studentADD = new student();
   cout << "First name: " << endl;
-  cin >> studentADD->firstname; 
+  cin >> studentADD->firstname;
   cout << "Last name: " << endl;
-  cin >> studentADD->lastname; 
+  cin >> studentADD->lastname;
   cout << "ID: " << endl;
-  cin >> studentADD->id; 
+  cin >> studentADD->id;
   cout << "GPA: " << endl;
-  cin >> rounder;
-  rounder = round(100*rounder)/100;
-  studentADD->gpa = rounder;
+  cin >> studentADD->gpa;
   //put in vector
   holder.push_back(studentADD);
-  
 }
 
 void del(vector<student*> &holder)
@@ -101,7 +94,7 @@ void del(vector<student*> &holder)
         }
       }
     }
-  else 
+  else
   {
      cout << "You need to have inputs to delete!" << endl;
   }
