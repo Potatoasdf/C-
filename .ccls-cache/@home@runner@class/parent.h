@@ -1,0 +1,48 @@
+#ifndef PARENT_H
+#define PARENT_H
+#include <vector>
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class parent
+{
+  public:
+    parent();
+    char identifier[3] = "hi";
+    char publisher[80];
+    int year = 0; 
+    char title[80];
+    float rating = 0;
+    float duration = 0;
+
+    void getYear(int& year)
+
+
+    {
+      cout << "Year?" << endl;
+      cin >> year;
+    }
+    void getTitle(char* title) 
+    {
+      cout << "Title?" << endl;
+      cin >> title;
+    }
+    void getRating(float& rating) 
+    {
+      cout << "rating?" << endl;
+      cin >> rating;
+    }
+    void getDuration(float& duration) 
+    {
+      cout << "Duration?" << endl;
+      cin >> duration;
+    }
+    void getPublisher(char* publisher) 
+    {
+      cout << "Publisher?" << endl;
+      cin >> publisher;
+    }
+
+};
+#endif
