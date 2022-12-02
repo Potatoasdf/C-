@@ -3,6 +3,7 @@ Project: Student List
 By: Aidan Gao
 Last worked on: 11/5/2022
 */
+#include <cmath>
 #include <vector>
 #include <iostream>
 #include <cstring>
@@ -63,6 +64,7 @@ int main() {
 void add(vector<student*> &holder)
 {
   //gets all the inputs
+  float rounder = 0;
   student* studentADD = new student();
   cout << "First name: " << endl;
   cin >> studentADD->firstname;
@@ -71,9 +73,12 @@ void add(vector<student*> &holder)
   cout << "ID: " << endl;
   cin >> studentADD->id;
   cout << "GPA: " << endl;
-  cin >> studentADD->gpa;
+  cin >> rounder;
+  rounder = round(100*rounder)/100;
+  studentADD->gpa = rounder;
   //put in vector
   holder.push_back(studentADD);
+
 }
 
 void del(vector<student*> &holder)
