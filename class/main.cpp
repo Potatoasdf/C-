@@ -1,3 +1,6 @@
+//Class
+//By: Aidan Gao
+//Last edited: 12/2/2022
 #include <vector>
 #include <iostream>
 #include <cstring>
