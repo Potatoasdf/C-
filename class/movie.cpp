@@ -3,7 +3,7 @@
 #include <cstring>
 #include "movie.h"
 using namespace std;
-
+//bassically just gets inputs, every child is bassically the same
 movie::movie (){
   strcpy(identifier , "mo");
   getYear(year);
