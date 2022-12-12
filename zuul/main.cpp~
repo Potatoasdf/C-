@@ -1,0 +1,13 @@
+#include <vector>
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main ()
+{
+  char* items  = new char[6];
+  strcpy(items, "hello");
+  cout << items;
+  
+  return 0;
+}
