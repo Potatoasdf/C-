@@ -5,7 +5,7 @@
 #include <cstring>
 #include "parent.h"
 
-
+//void getting inputs
 using namespace std;
 
 class movie : public parent
