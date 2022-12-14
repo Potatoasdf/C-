@@ -7,17 +7,14 @@ using namespace std;
 
 class rooms
 {
- public:
-  struct items
-  {
-    char item[80];
-    
-  };
+public:
+  
   rooms();
+  vector<char*> itemsheld;
   int right;
   int left;
   int layer;
-  char description[80];
+  char* description;
   
   
 };

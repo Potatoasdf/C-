@@ -1,7 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <cstring>
-#include "rooms.h"
+#include "items.h"
 using namespace std;
 //3  1  2
 //4     5
@@ -13,12 +13,25 @@ using namespace std;
 //
 int main ()
 {
+
+  items* inv = new items();
+  strcpy(inv->gold, "gold");
+  strcpy(inv->lapiz, "lapiz");
+  strcpy(inv->emerald, "emerald");
+  strcpy(inv->diamond, "diamond");
+  strcpy(inv->iron, "iron");
+  vector<char*> inv1;
+  inv1.push_back(inv->gold);
   vector<rooms*> holder;
   rooms* r1 = new rooms();
   r1->right = 1;
   r1->layer = 1;
   r1->left = 1;
-  rooms* r2 = new rooms();
+  r1->description = new char(3);
+  r1->itemsheld.push_back(inv->gold);
+  strcpy(r1->description,"hi");
+  holder.push_back(r1);
+  /*rooms* r2 = new rooms();
   r2->right = 1;
   r2->layer = 1;
   r2->left = 1;
@@ -74,6 +87,6 @@ int main ()
   r15->right = 0;
   r15->layer = 5;
   r15->left = 0;
-  
+  */
   return 0;
 }
