@@ -8,12 +8,11 @@ using namespace std;
 class rooms
 {
 public:
-  
+  //just vars
   rooms();
-  vector<char*> itemsheld;
-  int right;
-  int left;
-  int layer;
+  int x;
+  int y;
+  int id;
   char* description;
   
   

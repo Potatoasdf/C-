@@ -1,3 +1,7 @@
+//Project: Zuul
+//By: Aidan G
+//lasted edited: 12/16/22
+
 #include <vector>
 #include <iostream>
 #include <cstring>
@@ -9,8 +13,13 @@ using namespace std;
 //8  9  10
 //11    15
 //12 13 14
-//
-//
+//this is the map
+//gold in r15
+//gun in r2
+//eraser in r1
+//lead in r3
+//stone in r5
+//I make a graph to navigate through the rooms
 struct items
 {
   char* name;
@@ -20,9 +29,10 @@ struct items
 int main ()
 {
 
-
+  //creating a bunch of stuff
   vector<rooms*> holder;
   vector<items*> Hitems;
+ 
   
   items* gold = new items();
   gold->name = new char[5];
@@ -62,7 +72,6 @@ int main ()
   r1->id = 0;
   strcpy(r1->description,"You are in room1 the starting place:");
   holder.push_back(r1);
-  cout << "a" << endl;
   
   //r2
   rooms* r2 = new rooms();
@@ -79,17 +88,10 @@ int main ()
   r3->y = 0;
   r3->id = 2;
   r3->description = new char[19];
-  cout << "ok" << endl;
   strcpy(r3->description,"You are in: Hall 2");
-  cout << "ok" << endl;
-  
   holder.push_back(r3);
-  cout << "ok" << endl;
 
-  
   //r4
-    cout << "ok" << endl;
-
   rooms* r4 = new rooms();
   r4->x = 0;
   r4->y = 1;
@@ -97,7 +99,6 @@ int main ()
   r4->description = new char[48];
   strcpy(r4->description,"You are in spanish 2, the stuff of nightmares: ");
   holder.push_back(r4);
-    cout << "ok" << endl;
 
   //r5
   rooms* r5 = new rooms();
@@ -134,7 +135,6 @@ int main ()
   r8->description = new char[35];
   strcpy(r8->description,"You are in history class have fun!");
   holder.push_back(r8);
-    cout << "ok" << endl;
 
   //r9
   rooms* r9 = new rooms();
@@ -162,7 +162,6 @@ int main ()
   r11->description = new char[37];
   strcpy(r11->description,"You are in: Hall 3 because i said so");
   holder.push_back(r11);
-  cout << "ok" << endl;
 
   //r12
   rooms* r12 = new rooms();
@@ -205,158 +204,219 @@ int main ()
   int Croom_holder = 0;
   int count = 0;
   bool canmove = true;
-  cout << "OMG" << endl;
   //while alive
   while (alive)
     {
       if(canmove == false)
-      {
-        cout << "you ran into a wall, get gud" << endl;
-      }
+	{
+	  cout << "you ran into a wall, get gud" << endl;
+	}
       canmove = false;
       count++;
+      //win condition
       if (count == 20)
-      {
-        cout << "Instead of you getting bored of this game, the game got bored of you and it left, you win! I guess?" << endl;
-        alive = false;
-      }
+	{
+	  cout << "Instead of you getting bored of this game, the game got bored of you and it left, you win! I guess?" << endl;
+	  alive = false;
+	}
+      
       Croom = Croom_holder;
-      cout << holder[Croom]->x << " " << holder[Croom]->y << endl;
       cout << holder[Croom]->description << endl;
-      //go through items vector and compare the ids of the items with the the current room
+      //print all items in the room
       cout << "Items in room:" << endl;
       for (int i = 0; i < Hitems.size(); i++)
         {
           if (Hitems[i]->id == holder[Croom]->id)
-          {
-            cout << Hitems[i]->name << endl;
-          }
+	    {
+	      cout << Hitems[i]->name << endl;
+	    }
         }
-      //print everythin in itemsheld
+      /*iterates through the room vector and if the room is next to yours than
+       it prints where you can go*/
       for (vector<rooms*> ::iterator it = holder.begin() ; it != holder.end(); it++)
         {
 
           if((*it)->y == holder[Croom]->y)
-          {
-            if ((*it)->x +1 == holder[Croom]->x)
-            {
-              cout << "you can go left;" << endl;
-              cout << (*it)->x <<  ", "  << (*it)->y << endl;
-          
-            
-            }
-            if ((*it)->x -1 == holder[Croom]->x)
-            {
-              cout << "you can go right;" << endl;
-              cout << (*it)->x <<  ", "  << (*it)->y << endl;
-            }
-            
-          }
+	    {
+	      if ((*it)->x +1 == holder[Croom]->x)
+		{
+		  cout << "you can go left;" << endl;
+		  
+		  
+		}
+	      if ((*it)->x -1 == holder[Croom]->x)
+		{
+		  cout << "you can go right;" << endl;
+		}
+	      
+	    }
           if((*it)->x == holder[Croom]->x) 
-          {
-            if ((*it)->y +1 == holder[Croom]->y)
-            {
-              cout << "you can go up;" << endl;
-              cout << (*it)->x <<  ", "  << (*it)->y << endl;
-            }
-            if ((*it)->y -1 == holder[Croom]->y)
-            {
-              cout << "you can go down;" << endl;
-              cout << (*it)->x <<  ", "  << (*it)->y << endl;
-            }
-            
-          }
+	    {
+	      if ((*it)->y +1 == holder[Croom]->y)
+		{
+		  cout << "you can go up;" << endl;
+		  
+		}
+	      if ((*it)->y -1 == holder[Croom]->y)
+		{
+		  cout << "you can go down;" << endl;
+		  
+		}
+	      
+	    }
         }
-        
+      
       //get input
       char input[10];
-      cout << "Enter Q, L, R, U, D: " << endl;
+      cout << "Enter Q, L, R, U, D, Pickup, Drop, Inv: " << endl;
       cin >> input;
-      //if input is R then move right
+      /*the first 4 inputs are bassically the same so this is our only comment
+	but bassically you iterate through the holder vector that has all the rooms
+	and then you compare the the coordinates of the current room your in to all
+	the others and if it fills the if condition then you can move to another room
+	for example in this if statement it first compares the y coordinates of 
+	the rooms and if they are the same then you see if the room is on the left
+	of your room so you plus the room your currently trying to figure out is on
+	your left so you +1 cause graphs, if all the conditions are fufiled then
+	your allowed to move to the next room on the left, the next 3 are bassically
+	the same but the deal with right up and down
+*/
       if (strcmp(input,"L") == 0)
-      {
-        for (vector<rooms*> ::iterator it = holder.begin() ; it != holder.end(); it++)
-        {
-
-          if((*it)->y == holder[Croom]->y)
-          {
-            if ((*it)->x +1 == holder[Croom]->x)
+	{
+	  for (vector<rooms*> ::iterator it = holder.begin() ; it != holder.end(); it++)
+	    {
+	      
+	      if((*it)->y == holder[Croom]->y)
+		{
+		  if ((*it)->x +1 == holder[Croom]->x)
+		    {
+		      Croom_holder = (*it)->id;
+		      canmove = true;
+		      
+		    }
+		  
+		}
+	      
+	    }
+	  
+	}
+      //if input is R then move right
+      else if (strcmp(input,"R") == 0)
+	{
+	  for (vector<rooms*> ::iterator it = holder.begin() ; it!= holder.end(); it++)
+	    {
+	      if((*it)->y == holder[Croom]->y)
+		{
+		  if ((*it)->x -1 == holder[Croom]->x)
+		    {
+		      Croom_holder = (*it)->id;
+		      canmove = true;
+		  
+		    }
+		  
+		}
+	    }                  
+	  
+	}
+      
+      //if input is D then move down
+      else if (strcmp(input,"D") == 0)
+	{
+	  for (vector<rooms*> ::iterator it = holder.begin() ; it!= holder.end(); it++)
+	    {
+	      if((*it)->x == holder[Croom]->x)
+		{
+		  if ((*it)->y -1 == holder[Croom]->y)
+		    {
+		      Croom_holder = (*it)->id;
+		      canmove = true;
+		    }
+		  
+                }
+	      
+            }
+	  
+	}
+        
+      //if input is U then move down
+      else if (strcmp(input,"U") == 0)
+	{
+	  for (vector<rooms*> ::iterator it = holder.begin() ; it!= holder.end(); it++)
+	    {
+	      if((*it)->x == holder[Croom]->x)
+		{
+		  if ((*it)->y +1 == holder[Croom]->y)
+		    {
+		      Croom_holder = (*it)->id;
+		      canmove = true;
+		    }
+		}
+	    }
+	}
+      //go through the Hitems vector and check each items id
+      // if its 15 ( which is inv id ) then print the item
+      else if (strcmp(input, "Inv") == 0)
+	{
+	  canmove = true;
+	  for (int i = 0; i < Hitems.size(); i++)
             {
-              Croom_holder = (*it)->id;
-              canmove = true;
-              
+              if (Hitems[i]->id == 15)
+                {
+                  cout << Hitems[i]->name << endl;
+		  
+                }
             }
 
-          }
-
-        }
-        
-      }
-      //if input is L then move left
-      else if (strcmp(input,"R") == 0)
-      {
-        for (vector<rooms*> ::iterator it = holder.begin() ; it!= holder.end(); it++)
-          {
-            if((*it)->y == holder[Croom]->y)
-              {
-                if ((*it)->x -1 == holder[Croom]->x)
+	}
+      //checks all item for your id and if there is your id
+      //then it asks for comformation before deleting
+      else if (strcmp(input, "Drop") == 0)
+	{
+	  canmove = true;
+	  for (int i = 0; i < Hitems.size(); i++)
+            {
+              if (Hitems[i]->id == 15)
                 {
-                  Croom_holder = (*it)->id;
-                  canmove = true;
-
+                  cout << "Type Y if you want to drop: " << Hitems[i]->name << endl;
+                  cin >> input;
+                  if (strcmp(input, "Y") == 0)
+                    {
+                      Hitems[i]->id = Croom;
+		      
+                    }
                 }
-
-              }
-          }                  
+            }
+	}
+      //checks the item ids that are = to room you are currently in
+      //if there is ask to pick up and do if Y
+      else if (strcmp(input, "Pickup") == 0)
+	{
+	  canmove = true;
+	  for (int i = 0; i < Hitems.size(); i++)
+	    {
+	      if (Hitems[i]->id == holder[Croom]->id)
+		{
+		  cout << "Type Y if you want to pick up: " << Hitems[i]->name << endl;
+		  cin >> input;
+		  if (strcmp(input, "Y") == 0)
+		    {
+		      Hitems[i]->id = 15;
+		    }  
+		}
+	    }
+	}
         
-      }
-        
-      //if input is UP then move up
-      else if (strcmp(input,"D") == 0)
-      {
-OBOBOB        for (vector<rooms*> ::iterator it = holder.begin() ; it!= holder.end(); it++)
-          {
-            if((*it)->x == holder[Croom]->x)
-              {
-                if ((*it)->y -1 == holder[Croom]->y)
-                {
-OBOBOB                  Croom_holder = (*it)->id;
-                  canmove = true;
-                }
-
-                }
-
-OBOBOB            }
-        
-      }
-        
-      //if input is DOWN then move down
-      else if (strcmp(input,"U") == 0)
-      {
-        for (vector<rooms*> ::iterator it = holder.begin() ; it!= holder.end(); it++)
-          {
-            if((*it)->x == holder[Croom]->x)
-              {
-                if ((*it)->y +1 == holder[Croom]->y)
-                {
-                  Croom_holder = (*it)->id;
-                  canmove = true;
-                }
-              }
-          }
-      }
-        
-OAOAOA        
       //if input is Q then quit
       else if ( strcmp(input, "Q") == 0)
-OAOAOA      {
-        alive = false;
-      }
+	{
+	  alive = false;
+	}
       //if input isnt good
       else
-OAOAOA      {
-        cout << "Please enter an actual input!" << endl;
-      }
+	{
+	  cout << "Please enter an actual input!" << endl;
+	  canmove = true;
+	}
     }
   return 0;
 }
