@@ -1,13 +1,13 @@
-#include <vector>
-#include <iostream>
-#include <cstring>
 #include "Student.h"
 using namespace std;
 Student::Student()
 {
-  cout << "hello" << endl;
 }
-int Student::check()
+void Student::check(int num)
 {
-  return 1;
+  exist = num;
+}
+int Student::getCheck()
+{
+  return exist;
 }

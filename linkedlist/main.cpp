@@ -1,25 +1,65 @@
 #include <iostream>
 #include "Node.h"
 using namespace std;
-int main()
+
+void add(Node* &head, int &input, Student* newstudent);
+void print(Node* next, Node* &head);
+int main() 
 {
-  Node* node1 = NULL;
-  Node* node = NULL;
-  Student* newstudent = new Student();
-  //constructor
-  node = new Node(newstudent);
-  //check uses getStudent to get to check function and then check if it worked
-  int a = node -> getStudent() -> check();
-  if( a == 1)
+  //vars and inputs
+  Student *newstudent;
+  Node* head = NULL;
+  int input = 0;
+  add(head, input, newstudent);
+  input++;
+  add(head, input, newstudent);
+  input++;
+  add(head, input, newstudent);
+  input++;
+  print(head, head);
+  head->getNext()->setNext(NULL);
+  delete head->getNext()->getNext();
+  print(head, head);
+}
+
+void add(Node* &head, int &input, Student* newstudent)
+{
+  //add a new node
+  Node *newnode = head;
+  newstudent = new Student();
+  // if node is NULL create a new node and give it input
+  if(newnode == NULL)
+  {
+    head = new Node(newstudent);
+    head->getStudent()->check(input);
+    cout << head->getStudent()->getCheck() << endl;
+  }
+  else
+  {//if node != NULL then go through each node till the next node is NULL
+    while(newnode->getNext()!= NULL)
     {
-      cout << "works" << endl;
+      newnode = newnode->getNext();
     }
-  //uses getNext to make node equal to next
-  node = node -> getNext();
-  cout << "a" << endl;
-  node -> setNext(node1);
+    //give node input and create the next node
+    newnode->setNext(new Node(newstudent));
+    newnode->getNext()->getStudent()->check(input);
+    cout << newnode->getNext()->getStudent()->getCheck() << endl;
+
+    
+  }
   
-  
-  //destructor
-  delete node;
+}
+void print(Node* next, Node* &head)
+{
+  if(next == head)
+  {
+    cout << "List" << endl;
+
+  }
+  if(next != NULL)
+  {
+    //print the num in the node then move to the next node
+    cout << next->getStudent()->getCheck() << endl;
+    print(next->getNext(), head);
+  }
 }
