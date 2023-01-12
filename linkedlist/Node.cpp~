@@ -1,0 +1,28 @@
+#include "Node.h"
+using namespace std;
+
+Node::Node(Student* student) 
+{
+  next = NULL;
+  student = NULL;
+  
+}
+Node::~Node()
+{
+  next = NULL;
+  student = NULL;
+  cout << "E" << endl;
+  
+}
+Node* Node::getNext()
+{
+  return next;
+}
+void Node::setNext(Node* newnext)
+{
+  next = newnext;
+}
+Student* Node::getStudent()
+{
+  return student;
+}
