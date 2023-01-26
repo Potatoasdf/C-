@@ -142,6 +142,48 @@ void del(Node* &head)
 	    prev = prev->getNext();
 	    current = prev->getNext();
 	  }
+void del(Node* &head)
+{
+  Student* copy = new Student();
+  Node* prev = new Node(copy);
+  prev = head;
+  Node* current = prev->getNext();
+  int input;
+  if(head != NULL)
+    {
+      cout << "ID: " << endl;
+      cin >> input;
+      if(prev->getStudent()->returnID() == input)
+      {
+        prev = prev->getNext();
+        delete head;
+        head = prev;
+
+      }
+      while(current != NULL)
+      {
+        if(prev->getNext()->getStudent()->returnID() == input)
+          {
+
+            prev->setNext(prev->getNext()->getNext());
+            delete current;
+
+          }
+        else
+          {
+            prev = prev->getNext();
+            current = prev->getNext();
+          }
+
+
+      }
+
+    }
+  else
+    {
+      cout << "You need stuff to delete stuff" << endl;
+    }
+}
 
 	
       }
