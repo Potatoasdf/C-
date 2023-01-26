@@ -1,0 +1,156 @@
+#include <iostream>
+#include "node.h"
+using namespace std;
+void add(Node* &head);
+void print(Node* head);
+void del(Node* &head);
+void gpaAvg(Node* head);
+void sort(Node* &head);
+int main() 
+{
+  Node* head = NULL;
+  bool alive = true;
+  //while alive
+  while (alive)
+    {
+      //get input
+      char input[10];
+      cout << "Enter ADD, PRINT, DELETE, AVG, or QUIT: " << endl;
+      cin >> input;
+      //if input is QUIT then stop program
+      if( strcmp(input, "QUIT") == 0)
+      {
+        alive = false;
+      }
+      //if input is ADD start void add
+      else if(strcmp(input, "ADD") == 0)
+      {
+        add(head);
+      }
+      //if input is PRINT start void print
+      else if( strcmp(input, "PRINT") == 0)
+      {
+        print(head);
+      }
+      //if input is DELETE start void delete
+      else if( strcmp(input, "DELETE") == 0)
+      {
+        del(head);
+      }
+        //return avg gpa
+      else if(strcmp(input, "AVG") == 0)
+      {
+        gpaAvg(head);
+      }
+      //if input isnt good
+      else
+      {
+        cout << "Please enter an actual input!" << endl;
+      }
+      
+    }
+}
+void add(Node* &head)
+{  
+  Node *newnode = head;
+  Student* newstudent = new Student();
+  // if node is NULL create a new node and give it input
+  if(newnode == NULL)
+  {
+    head = new Node(newstudent);
+    head->getStudent()->getInputs();
+    head->getStudent()->print();
+  }
+  else
+  {
+    bool cont = true;
+    Node* temp = head;
+    newnode = new Node(newstudent);
+    newnode->getStudent()->getInputs();
+    newnode->getStudent()->print();
+    while (cont == true)
+      {
+	if (temp->getStudent()->returnID > newnode->getStudent()->returnID)
+	  {
+	  }
+      }
+
+    
+    /*//if node != NULL then go through each node till the next node is NULL
+    cout << 'e' << endl;
+    while(newnode->getNext()!= NULL)
+    {
+      newnode = newnode->getNext();
+    }
+    //give node input and create the next node
+    newnode->setNext(new Node(newstudent));
+    newnode->getNext()->getStudent()->getInputs();
+    cout << 'a' << endl;
+    newnode->getNext()->getStudent()->print();
+    sort(head);
+    */}
+  
+
+}
+void print(Node* head)
+{
+  while(head != NULL)
+    {
+      //print stuff then go to next node
+      head->getStudent()->print();
+      head = head->getNext();
+    }
+}
+void del(Node* &head)
+{
+  
+}
+// get total of all gpa then divide by number of nodes
+void gpaAvg(Node* head)
+{
+  float total = 0;
+  int count = 0;
+  while (head != NULL)
+    {
+      //add gpa to total, increase total students then go to next node
+      total += head->getStudent()->returnGPA();
+      count++;
+      head = head->getNext();
+      
+    }
+  cout << total/count << endl;
+}
+//compare the current and next nodes ids, if next is greater than current switch current and next then add current to holder
+/* 1 4 5 2 3
+c n
+1 4 
+4 5
+5 2
+2 5
+5 3
+3 5
+1 4 2 3 5
+repeat this proccess until they no longer switch
+
+void sort(Node* &head)
+{
+  bool cont = true;
+  Node* holder;
+  Node* current = head;
+  Node* next = head->getNext();
+  while (next != NULL)
+    {
+      while (cont == true)
+	{
+	  if (current->getStudent->returnID() > next->getStudent()->returnID())
+	    {
+	      holder = current;
+	      current = next;
+	      next = holder;
+	    }
+	}
+      
+    }
+
+  
+}
