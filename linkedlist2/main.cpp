@@ -5,7 +5,6 @@ void add(Node* &head);
 void print(Node* head);
 void del(Node* &head);
 void gpaAvg(Node* head);
-void sort(Node* &head);
 int main() 
 {
   Node* head = NULL;
@@ -73,10 +72,19 @@ void add(Node* &head)
       {
 	if (temp->getNext() == NULL)
         {
-          temp->setNext(newnode);
+          if(temp->getStudent()->returnID() < newnode->getStudent()->returnID())
+	    {
+	      temp->setNext(newnode);
+	    }
+	  else
+	    {
+	      head = newnode;
+	      head ->setNext(temp);
+	    }
           cont = false;
 
         }
+      
 
 	else if (temp->getNext()->getStudent()->returnID() > newnode->getStudent()->returnID())
 	{
@@ -86,29 +94,12 @@ void add(Node* &head)
 	  cont = false;
 	}
 	else
-	  {
-	    temp = temp->getNext();
-	  }
-
+	{
+	  temp = temp->getNext();
+	}
 	
-      }
-
-    
-    /*//if node != NULL then go through each node till the next node is NULL
-    cout << 'e' << endl;
-    while(newnode->getNext()!= NULL)
-    {
-      newnode = newnode->getNext();
-    }
-    //give node input and create the next node
-    newnode->setNext(new Node(newstudent));
-    newnode->getNext()->getStudent()->getInputs();
-    cout << 'a' << endl;
-    newnode->getNext()->getStudent()->print();
-    sort(head);
-    */}
-  
-
+      }  
+  }
 }
 void print(Node* head)
 {
@@ -121,7 +112,14 @@ void print(Node* head)
 }
 void del(Node* &head)
 {
-  
+  int input;
+  if(head != NULL)
+    {
+    }
+  else
+    {
+      cout << "You need stuff to delete stuff" << endl;
+    }
 }
 // get total of all gpa then divide by number of nodes
 void gpaAvg(Node* head)
@@ -138,38 +136,3 @@ void gpaAvg(Node* head)
     }
   cout << total/count << endl;
 }
-//compare the current and next nodes ids, if next is greater than current switch current and next then add current to holder
-/* 1 4 5 2 3
-c n
-1 4 
-4 5
-5 2
-2 5
-5 3
-3 5
-1 4 2 3 5
-repeat this proccess until they no longer switch
-
-void sort(Node* &head)
-{
-  bool cont = true;
-  Node* holder;
-  Node* current = head;
-  Node* next = head->getNext();
-  while (next != NULL)
-    {
-      while (cont == true)
-	{
-	  if (current->getStudent->returnID() > next->getStudent()->returnID())
-	    {
-	      holder = current;
-	      current = next;
-	      next = holder;
-	    }
-	}
-      
-    }
-
-  
-}
-*/
