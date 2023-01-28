@@ -1,10 +1,10 @@
 #include <iostream>
 #include "node.h"
 using namespace std;
-void add(Node* &head);
+void add(Node* &head, Node* temp, Student* &newstudent);
 void print(Node* head);
 void del(Node* &head, int input, Node* &temp);
-void gpaAvg(Node* head);
+void gpaAvg(Node* head, int count, float total);
 int main() 
 {
   Node* head = NULL;
@@ -24,7 +24,10 @@ int main()
       //if input is ADD start void add
       else if(strcmp(input, "ADD") == 0)
       {
-        add(head);
+	Student* newstudent = new Student();
+	newstudent->getInputs();
+	newstudent->print();
+	add(head, head, newstudent);
       }
       //if input is PRINT start void print
       else if( strcmp(input, "PRINT") == 0)
@@ -42,7 +45,9 @@ int main()
         //return avg gpa
       else if(strcmp(input, "AVG") == 0)
       {
-        gpaAvg(head);
+	int count = 0;
+	float total = 0;
+        gpaAvg(head, count, total);
       }
       //if input isnt good
       else
@@ -52,59 +57,37 @@ int main()
       
     }
 }
-void add(Node* &head)
-{  
-  Node *newnode = head;
-  Student* newstudent = new Student();
+void add(Node* &head, Node* temp, Student* &newstudent )
+{
+  Node* newnode = new Node(newstudent);
   // if node is NULL create a new node and give it input
-  if(newnode == NULL)
-  {
-    head = new Node(newstudent);
-    head->getStudent()->getInputs();
-    head->getStudent()->print();
-  }
-  else
-  {
-    cout << "e" << endl;
-    bool cont = true;
-    Node* temp = head;
-    newnode = new Node(newstudent);
-    newnode->getStudent()->getInputs();
-    newnode->getStudent()->print();
-    while (cont == true)
-      {
-	if (temp->getNext() == NULL)
-        {
-          if(temp->getStudent()->returnID() < newnode->getStudent()->returnID())
-	    {
-	      temp->setNext(newnode);
-	    }
-	  else
-	    {
-	      head = newnode;
-	      head ->setNext(temp);
-	    }
-          cont = false;
-
-        }
-      
-
-	else if (temp->getNext()->getStudent()->returnID() > newnode->getStudent()->returnID())
-	{
-	  
-	  newnode->setNext(temp->getNext());
-	  temp->setNext(newnode);
-	  cont = false;
-	}
-	else
-	{
-	  temp = temp->getNext();
-	}
+  if(head == NULL)
+    {
+      head = new Node(newstudent);
+    }
+  else if (temp->getNext() == NULL)
+    {	
+      temp->setNext(newnode);
 	
-      }  
-  }
+    }
   
+    
+  else if (temp->getNext()->getStudent()->returnID() > newnode->getStudent()->returnID())
+    {
+	
+      newnode->setNext(temp->getNext());
+      temp->setNext(newnode);
+    }
+  else
+    {
+      add(head, temp->getNext(), newstudent);
+      
+    }  
 }
+
+
+
+
 void print(Node* head)
 {
   //while head isnt null, print student data then go to next one using recursion
@@ -152,17 +135,23 @@ void del(Node* &head, int input, Node* &temp)
     }
 }
 // get total of all gpa then divide by number of nodes
-void gpaAvg(Node* head)
+void gpaAvg(Node* head, int count, float total)
 {
-  float total = 0;
-  int count = 0;
-  while (head != NULL)
+
+  if (head != NULL)
     {
-      //add gpa to total, increase total students then go to next node
+      
+      //add gpa to total, increase total students then go to next node, using recursion
       total += head->getStudent()->returnGPA();
       count++;
-      head = head->getNext();
+      cout << total << endl;
+      gpaAvg(head->getNext(), count, total);
       
     }
-  cout << total/count << endl;
+  else
+    {
+      cout << total << endl;
+      cout << float((int)(((total/count)*100)+0.5))/100 << endl;
+
+    }
 }

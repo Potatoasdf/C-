@@ -24,7 +24,7 @@ void Student::getInputs()
 }
 float Student::returnGPA()
 {
-  return float((int)(gpa*100+0.5)/100);
+  return gpa;
 }
 int Student::returnID()
 {
