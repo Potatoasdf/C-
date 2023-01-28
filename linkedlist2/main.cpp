@@ -3,7 +3,7 @@
 using namespace std;
 void add(Node* &head);
 void print(Node* head);
-void del(Node* &head);
+void del(Node* &head, int input, Node* &temp);
 void gpaAvg(Node* head);
 int main() 
 {
@@ -14,7 +14,7 @@ int main()
     {
       //get input
       char input[10];
-      cout << "Enter ADD, PRINT, DELETE, AVG, or QUIT: " << endl;
+      cout << "Enter ADD, PRINT, DEL, AVG, or QUIT: " << endl;
       cin >> input;
       //if input is QUIT then stop program
       if( strcmp(input, "QUIT") == 0)
@@ -32,9 +32,12 @@ int main()
         print(head);
       }
       //if input is DELETE start void delete
-      else if( strcmp(input, "DELETE") == 0)
+      else if( strcmp(input, "DEL") == 0)
       {
-        del(head);
+	int input;
+	cout << "ID" << endl;
+	cin >> input;
+        del(head, input, head);
       }
         //return avg gpa
       else if(strcmp(input, "AVG") == 0)
@@ -100,56 +103,52 @@ void add(Node* &head)
 	
       }  
   }
+  
 }
 void print(Node* head)
 {
-  while(head != NULL)
+  //while head isnt null, print student data then go to next one using recursion
+  if(head != NULL)
     {
       //print stuff then go to next node
       head->getStudent()->print();
-      head = head->getNext();
+      print(head->getNext());
     }
 }
-void del(Node* &head)
+void del(Node* &head, int input, Node* &temp)
 {
-  Student* copy = new Student();
-  Node* prev = new Node(copy);
-  prev = head;
-  Node* current = prev->getNext();
-  int input;
-  if(head != NULL)
+  //if list empty
+  if(head == NULL)
     {
-      cout << "ID: " << endl;
-      cin >> input;
-      if(prev->getStudent()->returnID() == input)
-      {
-	prev = prev->getNext();
-	delete head;
-	head = prev;
-	 
-      }
-      while(current != NULL)
-      {
-	if(prev->getNext()->getStudent()->returnID() == input)
-	  {
-	    
-	    prev->setNext(prev->getNext()->getNext());
-	    delete current;
-	    
-	  }
-	else
-	  {
-	    prev = prev->getNext();
-	    current = prev->getNext();
-	  }
-
-	
-      }
-      
+      cout << "you need students" << endl;
     }
+
+  // first student
+  else if(head->getStudent()->returnID() == input)
+    {
+      Node* holder = head;
+      temp = head->getNext();
+      holder->~Node();
+      head = temp;
+    }
+  //end of list
+  else if(temp->getNext() == NULL)
+    {
+      cout << "No more students" << endl;
+    }
+
+  // del if student has id, delete student then replace with student ahead
+  else if(temp->getNext()->getStudent()->returnID() == input)
+    {
+      Node* holder = temp->getNext()->getNext();
+      temp->getNext()->~Node();
+      temp->setNext(holder);
+    }
+  //recurse by going to next student
   else
     {
-      cout << "You need stuff to delete stuff" << endl;
+      Node* holder = temp->getNext();
+      del(head, input, holder);
     }
 }
 // get total of all gpa then divide by number of nodes
