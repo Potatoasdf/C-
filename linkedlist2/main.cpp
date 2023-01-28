@@ -47,7 +47,14 @@ int main()
       {
 	int count = 0;
 	float total = 0;
-        gpaAvg(head, count, total);
+	if(head == NULL)
+	  {
+	    cout << "no students" << endl;
+	  }
+	else
+	  {
+	    gpaAvg(head, count, total);
+	  }
       }
       //if input isnt good
       else
@@ -65,19 +72,21 @@ void add(Node* &head, Node* temp, Student* &newstudent )
     {
       head = new Node(newstudent);
     }
+  //last node
   else if (temp->getNext() == NULL)
     {	
       temp->setNext(newnode);
 	
     }
   
-    
+  // if foudn place for node to go
   else if (temp->getNext()->getStudent()->returnID() > newnode->getStudent()->returnID())
     {
 	
       newnode->setNext(temp->getNext());
       temp->setNext(newnode);
     }
+  //recursive
   else
     {
       add(head, temp->getNext(), newstudent);
@@ -137,20 +146,20 @@ void del(Node* &head, int input, Node* &temp)
 // get total of all gpa then divide by number of nodes
 void gpaAvg(Node* head, int count, float total)
 {
-
+  
   if (head != NULL)
     {
       
       //add gpa to total, increase total students then go to next node, using recursion
       total += head->getStudent()->returnGPA();
       count++;
-      cout << total << endl;
       gpaAvg(head->getNext(), count, total);
       
     }
   else
     {
-      cout << total << endl;
+      //maths
+      
       cout << float((int)(((total/count)*100)+0.5))/100 << endl;
 
     }
