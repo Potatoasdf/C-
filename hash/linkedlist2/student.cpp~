@@ -1,0 +1,45 @@
+#include <iostream>
+#include "student.h"
+using namespace std;
+Student::Student()
+{
+}
+Student::~Student()
+{
+  cout << "E" << endl;
+  delete first;
+  cout << "E" << endl;
+  delete last;
+  cout << "e" << endl;
+  
+}
+void Student::getInputs()
+{
+  first = new char[80];
+  last = new char[80];
+  cout << "First name: ";
+  cin >> first;
+  cout << "Last name: ";
+  cin >> last;
+  cout << "Id: ";
+  cin >> id;
+  cout << "GPA: ";
+  cin >> gpa;
+}
+float Student::returnGPA()
+{
+  return gpa;
+}
+int Student::returnID()
+{
+  return id;
+}
+void Student::print()
+{
+  cout << first << endl;
+  cout << last << endl;
+  cout << id << endl;
+  cout << gpa << endl;
+  cout << "---------" << endl;
+  
+}
