@@ -4,17 +4,19 @@
 using namespace std;
 class Student
 {
-  public:
-    Student();
-    ~Student();
-    void getInputs();
-    float returnGPA();
-    int returnID();
-    void print();
-    char* first;
-    char* last;
-    int id;
-    float gpa;
+public:
+  Student();
+  ~Student();
+  void getInputs();
+  float returnGPA();
+  int returnID();
+  int acsii(int size);
+  void print();
+  char* first;
+  char* last;
+  int id;
+  float gpa;
+  int hashNum;
 };
 
 

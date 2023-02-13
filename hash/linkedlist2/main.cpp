@@ -1,13 +1,16 @@
+#include <cstring>
 #include <iostream>
 #include "node.h"
 using namespace std;
-void add(Node* &head, Node* temp, Student* &newstudent);
-void print(Node* head);
-void del(Node* &head, int input, Node* &temp);
-void gpaAvg(Node* head, int count, float total);
+void add(Node** &hash, int size);
+//void rehash()
+void print(Node** &hash, int size);
+//void del(Node* &head, int input, Node* &temp);
+//void gpaAvg(Node* head, int count, float total);
 int main() 
 {
-  Node* head = NULL;
+  int size = 101;
+  Node** hash = new Node*[size];
   bool alive = true;
   //while alive
   while (alive)
@@ -24,16 +27,16 @@ int main()
       //if input is ADD start void add
       else if(strcmp(input, "ADD") == 0)
       {
-	Student* newstudent = new Student();
-	newstudent->getInputs();
-	newstudent->print();
-	add(head, head, newstudent);
+
+	add(hash, size);
       }
+      
       //if input is PRINT start void print
       else if( strcmp(input, "PRINT") == 0)
       {
-        print(head);
+        print(hash, size);
       }
+      /*
       //if input is DELETE start void delete
       else if( strcmp(input, "DEL") == 0)
       {
@@ -42,7 +45,7 @@ int main()
 	cin >> input;
         del(head, input, head);
       }
-        //return avg gpa
+        return avg gpa
       else if(strcmp(input, "AVG") == 0)
       {
 	int count = 0;
@@ -56,6 +59,7 @@ int main()
 	    gpaAvg(head, count, total);
 	  }
       }
+      */
       //if input isnt good
       else
       {
@@ -64,49 +68,52 @@ int main()
       
     }
 }
-void add(Node* &head, Node* temp, Student* &newstudent )
+void add(Node** & hash, int size)
 {
+  int count = 1;
+  Student* newstudent = new Student();
+  newstudent->getInputs();
+  newstudent->print();
+
   Node* newnode = new Node(newstudent);
-  // if node is NULL create a new node and give it input
-  if(head == NULL)
+  if(hash[newnode->getStudent()->acsii(size)] == NULL)
     {
-      head = new Node(newstudent);
+      hash[newnode->getStudent()->acsii(size)] = newnode;
     }
-  //last node
-  else if (temp->getNext() == NULL)
-    {	
-      temp->setNext(newnode);
-	
-    }
-  
-  // if foudn place for node to go
-  else if (temp->getNext()->getStudent()->returnID() > newnode->getStudent()->returnID())
-    {
-	
-      newnode->setNext(temp->getNext());
-      temp->setNext(newnode);
-    }
-  //recursive
   else
     {
-      add(head, temp->getNext(), newstudent);
+      Node* temp = hash[newnode->getStudent()->acsii(size)]->getNext();
+      while (temp != NULL)
+	{
+	  temp = temp->getNext();
+	  count++;
+	}
+      newnode->setNext(temp->getNext());
+      temp->setNext(newnode);
       
-    }  
+    }
+
 }
 
 
 
 
-void print(Node* head)
+void print(Node** &hash, int size)
 {
-  //while head isnt null, print student data then go to next one using recursion
-  if(head != NULL)
+  for(int i = 0; i < size; i++)
     {
-      //print stuff then go to next node
-      head->getStudent()->print();
-      print(head->getNext());
+      if(hash[i] != NULL)
+	{
+	  Node* temp = hash[i];
+	  while( temp != NULL)
+	    {
+	      temp->getStudent()->print();
+	      temp = temp->getNext();
+	    }
+	}
     }
 }
+/*
 void del(Node* &head, int input, Node* &temp)
 {
   //if list empty
@@ -164,3 +171,4 @@ void gpaAvg(Node* head, int count, float total)
 
     }
 }
+*/

@@ -1,3 +1,4 @@
+#include <cstring>
 #include <iostream>
 #include "student.h"
 using namespace std;
@@ -29,6 +30,19 @@ float Student::returnGPA()
 int Student::returnID()
 {
   return id;
+}
+int Student::acsii(int size)
+{
+  for(int i = 0; i < strlen(first); i++)
+    {
+      hashNum += first[i];
+    }
+  for(int i = 0; i < strlen(last); i++)
+    {
+      hashNum += last[i];
+    }
+  return hashNum%size;
+
 }
 void Student::print()
 {

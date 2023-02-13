@@ -1,7 +1,0 @@
-#include <iostrean>
-#include <cstring>
-#include "hash.h"
-
-using namespace std;
-
-Hash::Hash(
