@@ -35,13 +35,14 @@ int Student::acsii(int size)
 {
   for(int i = 0; i < strlen(first); i++)
     {
-      hashNum += first[i];
+      hashNum += int(first[i]);
     }
   for(int i = 0; i < strlen(last); i++)
     {
-      hashNum += last[i];
+      hashNum += int(last[i]);
     }
-  return hashNum%size;
+  cout << hash  Num%(size - 1);
+  return hashNum% (size - 1);
 
 }
 void Student::print()

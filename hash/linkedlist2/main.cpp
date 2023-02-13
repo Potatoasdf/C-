@@ -29,6 +29,7 @@ int main()
       {
 
 	add(hash, size);
+	
       }
       
       //if input is PRINT start void print
@@ -68,20 +69,29 @@ int main()
       
     }
 }
-void add(Node** & hash, int size)
+//ascii is wrong
+void add(Node** &hash, int size)
 {
   int count = 1;
   Student* newstudent = new Student();
   newstudent->getInputs();
   newstudent->print();
-
+  
   Node* newnode = new Node(newstudent);
   if(hash[newnode->getStudent()->acsii(size)] == NULL)
     {
-      hash[newnode->getStudent()->acsii(size)] = newnode;
+      cout << "chicken" << endl;
+      hash[newnode->getStudent()->acsii(size)] = new Node(newstudent);
+      cout << "SMTH" << endl;
+      cout << hash[newnode->getStudent()->acsii(size)] << endl;
+      cout <<  hash[newnode->getStudent()->acsii(size)] ->getStudent() << endl;
+      hash[newnode->getStudent()->acsii(size)] ->getStudent()->print();
+      
+      cout << "nugg" << endl;
     }
   else
     {
+      cout << "IN" << endl;
       Node* temp = hash[newnode->getStudent()->acsii(size)]->getNext();
       while (temp != NULL)
 	{
@@ -106,7 +116,7 @@ void print(Node** &hash, int size)
 	{
 	  Node* temp = hash[i];
 	  while( temp != NULL)
-	    {
+	    { 
 	      temp->getStudent()->print();
 	      temp = temp->getNext();
 	    }
