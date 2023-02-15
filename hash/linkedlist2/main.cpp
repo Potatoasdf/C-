@@ -2,7 +2,7 @@
 #include <iostream>
 #include "node.h"
 using namespace std;
-void add(Node** &hash, int size);
+void add(Node** &hash, int &size);
 void rehash(Node** &hash, int &size);
 void print(Node** &hash, int size);
 void delExtra(Node** &hash, int size);
@@ -75,7 +75,7 @@ int main()
     }
 }
 //ascii is wrong
-void add(Node** &hash, int size)
+void add(Node** &hash, int &size)
 {
   int count = 0;
   Student* newstudent = new Student();
@@ -114,6 +114,7 @@ void add(Node** &hash, int size)
 
 void print(Node** &hash, int size)
 {
+  cout << size << endl;
   // iterates through heap to find entrys that arent empty and then iterates through the entry and prints everything in the entry
   for(int i = 0; i < size; i++)
     {
@@ -227,29 +228,38 @@ void rehash(Node** &hash, int &size)
     {
       if(hash[i] != NULL)
 	{
-	  //if first entry is empty then add 
+	  //go till end of entry 
 	  Node* current = hash[i];
-	  if(temp[current->getStudent()->acsii(size)] == NULL)
+	  while(current != NULL)
 	    {
-	      cout << "BLAP" << endl;
-	      temp[current->getStudent()->acsii(size)] = current;
-	      temp[current->getStudent()->acsii(size)]->getStudent()->print();
-	    }
-	  else
-	    {
-	      Node* endNode = temp[current->getStudent()->acsii(size)]->getNext();
-	      while( endNode->getNext() != NULL)
+	      // entry in temp is empty then add current to it
+	      Node* tempCurrent = current;
+	      if(temp[current->getStudent()->acsii(size)] == NULL)
 		{
-		  endNode = endNode->getNext();
-		  
+		  current = current->getNext();
+                  tempCurrent->setNext(NULL);
+		  temp[tempCurrent->getStudent()->acsii(size)] = tempCurrent;
+		  temp[tempCurrent->getStudent()->acsii(size)]->getStudent()->print();
 		}
-	      endNode->setNext(current);
-	      endNode->getNext()->getStudent()->print();
+	      // else go to the end of the temp entry and then add
+	      else
+		{
+		  Node* endNode = temp[tempCurrent->getStudent()->acsii(size)];
+		  while( endNode->getNext() != NULL)
+		    {
+		      endNode = endNode->getNext();
+		    }
+		  current = current->getNext();
+                  tempCurrent->setNext(NULL);
+		  endNode->setNext(tempCurrent);
+		  endNode->getNext()->getStudent()->print();
 		
+		}
+	      
 	    }
 	}
     }
-  cout << "WOW" << endl;
+  
   delete[] hash;
   hash = temp;
   
