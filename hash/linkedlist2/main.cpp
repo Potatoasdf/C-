@@ -216,6 +216,7 @@ void rehash(Node** &hash, int &size)
 {
   // double size and make it into new hash
   size = size * 2;
+  cout << size << endl;
   Node** temp = new Node*[size];
   for (int i = 0; i < size; i++)
     {
@@ -232,16 +233,18 @@ void rehash(Node** &hash, int &size)
 	    {
 	      cout << "BLAP" << endl;
 	      temp[current->getStudent()->acsii(size)] = current;
+	      temp[current->getStudent()->acsii(size)]->getStudent()->print();
 	    }
 	  else
 	    {
-	      Node* endNode= temp[current->getStudent()->acsii(size)]->getNext();
+	      Node* endNode = temp[current->getStudent()->acsii(size)]->getNext();
 	      while( endNode->getNext() != NULL)
 		{
 		  endNode = endNode->getNext();
 		  
 		}
 	      endNode->setNext(current);
+	      endNode->getNext()->getStudent()->print();
 		
 	    }
 	}
