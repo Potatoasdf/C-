@@ -1,3 +1,4 @@
+#include <fstream>
 #include <cstring>
 #include <iostream>
 #include "node.h"
@@ -69,7 +70,7 @@ int main()
 
       else if (strcmp(input, "GEN") == 0)
 	{
-	  generateRand();
+ifstream input_file("blah.txt", ios::in);	  generateRand();
 	}
       
       //if input isnt good
@@ -272,4 +273,7 @@ void rehash(Node** &hash, int &size)
 }
 void generateRand()
 {
+  fstream txt;
+  txt.open("firstname.txt", ios::in);
+  
 }
