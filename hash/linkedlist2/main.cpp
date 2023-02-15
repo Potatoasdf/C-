@@ -8,6 +8,7 @@ void print(Node** &hash, int size);
 void delExtra(Node** &hash, int size);
 void del(Node* &head, int input, Node* &temp, Node** &hash, int size, int iteration, bool &confirm);
 void gpaAvg(Node** &hash, int size, int count, float total);
+void generateRand();
 int main() 
 {
   int size = 101;
@@ -23,7 +24,7 @@ int main()
     {
       //get input
       char input[10];
-      cout << "Enter ADD, PRINT, DEL, AVG, or QUIT: " << endl;
+      cout << "Enter ADD, PRINT, DEL, AVG, GEN, or QUIT: " << endl;
       cin >> input;
       //if input is QUIT then stop program
       if( strcmp(input, "QUIT") == 0)
@@ -65,6 +66,11 @@ int main()
 	    gpaAvg(hash, size, count, total);
 	  }
       }
+
+      else if (strcmp(input, "GEN") == 0)
+	{
+	  generateRand();
+	}
       
       //if input isnt good
       else
@@ -263,4 +269,7 @@ void rehash(Node** &hash, int &size)
   delete[] hash;
   hash = temp;
   
+}
+void generateRand()
+{
 }
