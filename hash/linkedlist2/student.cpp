@@ -33,16 +33,20 @@ int Student::returnID()
 }
 int Student::acsii(int size)
 {
+  hashNum = 0;
   for(int i = 0; i < strlen(first); i++)
     {
       hashNum += int(first[i]);
+      cout << hashNum << endl;
     }
   for(int i = 0; i < strlen(last); i++)
     {
       hashNum += int(last[i]);
+      cout << hashNum << endl;
     }
-  cout << hash  Num%(size - 1);
-  return hashNum% (size - 1);
+  hashNum = hashNum%(size - 1);
+  cout << hashNum << endl;
+  return hashNum;
 
 }
 void Student::print()

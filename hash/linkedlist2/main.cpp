@@ -6,7 +6,7 @@ void add(Node** &hash, int size);
 //void rehash()
 void print(Node** &hash, int size);
 //void del(Node* &head, int input, Node* &temp);
-//void gpaAvg(Node* head, int count, float total);
+void gpaAvg(Node** hash, int size, int count, float total);
 int main() 
 {
   int size = 101;
@@ -46,21 +46,22 @@ int main()
 	cin >> input;
         del(head, input, head);
       }
-        return avg gpa
+      */
+      // return avg gpa
       else if(strcmp(input, "AVG") == 0)
       {
 	int count = 0;
 	float total = 0;
-	if(head == NULL)
+	if(hash == NULL)
 	  {
 	    cout << "no students" << endl;
 	  }
 	else
 	  {
-	    gpaAvg(head, count, total);
+	    gpaAvg(hash, size, count, total);
 	  }
       }
-      */
+      
       //if input isnt good
       else
       {
@@ -76,31 +77,27 @@ void add(Node** &hash, int size)
   Student* newstudent = new Student();
   newstudent->getInputs();
   newstudent->print();
-  
-  Node* newnode = new Node(newstudent);
-  if(hash[newnode->getStudent()->acsii(size)] == NULL)
+  if(hash[newstudent->acsii(size)] == NULL)
     {
-      cout << "chicken" << endl;
-      hash[newnode->getStudent()->acsii(size)] = new Node(newstudent);
-      cout << "SMTH" << endl;
-      cout << hash[newnode->getStudent()->acsii(size)] << endl;
-      cout <<  hash[newnode->getStudent()->acsii(size)] ->getStudent() << endl;
-      hash[newnode->getStudent()->acsii(size)] ->getStudent()->print();
-      
-      cout << "nugg" << endl;
+      hash[newstudent->acsii(size)] = new Node(newstudent);
+      hash[newstudent->acsii(size)]->getStudent()->print();
     }
   else
     {
+      Node* newnode = new Node(newstudent);
       cout << "IN" << endl;
-      Node* temp = hash[newnode->getStudent()->acsii(size)]->getNext();
-      while (temp != NULL)
+      Node* temp = hash[newnode->getStudent()->acsii(size)];
+      cout << "C" << endl;
+      while (temp->getNext() != NULL)
 	{
+	  cout << "A" << endl;
 	  temp = temp->getNext();
+	  cout << "B" << endl;
 	  count++;
 	}
-      newnode->setNext(temp->getNext());
-      temp->setNext(newnode);
       
+      temp->setNext(newnode);
+      cout << "C" << endl;
     }
 
 }
@@ -161,24 +158,19 @@ void del(Node* &head, int input, Node* &temp)
     }
 }
 // get total of all gpa then divide by number of nodes
-void gpaAvg(Node* head, int count, float total)
-{
-  
-  if (head != NULL)
-    {
-      
-      //add gpa to total, increase total students then go to next node, using recursion
-      total += head->getStudent()->returnGPA();
-      count++;
-      gpaAvg(head->getNext(), count, total);
-      
-    }
-  else
-    {
-      //maths
-      
-      cout << float((int)(((total/count)*100)+0.5))/100 << endl;
-
-    }
-}
 */
+void gpaAvg(Node** hash, int size, int count, float total)
+{
+  for (int i = 0; i < size; i++)
+    {
+      while (hash[i] != NULL)
+	{
+	  total += hash[i]->getStudent()->returnGPA();
+	  count++;
+	  hash[i] = hash[i]->getNext();
+	}
+    }
+  cout << float((int)(((total/count)*100)+0.5))/100 << endl;
+
+}
+
