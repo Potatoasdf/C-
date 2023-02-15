@@ -5,7 +5,8 @@ using namespace std;
 void add(Node** &hash, int size);
 void rehash(Node** &hash, int &size);
 void print(Node** &hash, int size);
-void del(Node** &hash, int size);
+void delExtra(Node** &hash, int size);
+void del(Node* &head, int input, Node* &temp, Node** &hash, int size, int iteration, bool &confirm);
 void gpaAvg(Node** &hash, int size, int count, float total);
 int main() 
 {
@@ -47,7 +48,7 @@ int main()
       else if( strcmp(input, "DEL") == 0)
       {
 
-        del(hash, size);
+        delExtra(hash, size);
       }
       
       // return avg gpa
@@ -80,6 +81,7 @@ void add(Node** &hash, int size)
   Student* newstudent = new Student();
   newstudent->getInputs();
   newstudent->print();
+  //finds the acsii of the student and puts it in the entry num if its the first student
   if(hash[newstudent->acsii(size)] == NULL)
     {
       hash[newstudent->acsii(size)] = new Node(newstudent);
@@ -87,25 +89,21 @@ void add(Node** &hash, int size)
     }
   else
     {
+      // else iterate to the end of the entry and put the newnode there
       count++;
       Node* newnode = new Node(newstudent);
-      cout << "IN" << endl;
       Node* temp = hash[newnode->getStudent()->acsii(size)];
-      cout << "C" << endl;
       while (temp->getNext() != NULL)
 	{
-	  cout << "A" << endl;
 	  temp = temp->getNext();
-	  cout << "B" << endl;
 	  count++;
 	}
-      
       temp->setNext(newnode);
-      cout << "C" << endl;
     }
-  if (count == 4)
+  cout << count << endl;
+  // if hash gets to crowded rehash
+  if (count == 3)
     {
-      cout << "here" << endl;
       rehash(hash, size);
     }
 
@@ -116,6 +114,7 @@ void add(Node** &hash, int size)
 
 void print(Node** &hash, int size)
 {
+  // iterates through heap to find entrys that arent empty and then iterates through the entry and prints everything in the entry
   for(int i = 0; i < size; i++)
     {
       if(hash[i] != NULL)
@@ -129,9 +128,45 @@ void print(Node** &hash, int size)
 	}
     }
 }
-
-void del(Node** &hash, int size)
+// bassically copied from linkedlist2
+void del(Node* &head, int input, Node* &temp, Node** &hash, int size, int iteration, bool &confirm)
 {
+  //if list empty
+  if(head == NULL)
+    {
+      cout << "you need students" << endl;
+    }
+
+  // first student
+  else if(head->getStudent()->returnID() == input)
+    {
+      Node* holder = head;
+      temp = head->getNext();
+      holder->~Node();
+      head = temp;
+      hash[iteration] = head;
+      confirm = true;
+    }
+  // del if student has id, delete student then replace with student ahead
+  else if(temp->getNext()->getStudent()->returnID() == input)
+    {
+      Node* holder = temp->getNext()->getNext();
+      temp->getNext()->~Node();
+      temp->setNext(holder);
+      hash[iteration] = temp;
+      confirm = true;
+    }
+  //recurse by going to next student
+  else
+    {
+      Node* holder = temp->getNext();
+      del(head, input, holder, hash, size, iteration, confirm);
+    }
+}
+
+void delExtra(Node** &hash, int size)
+{
+  //gets id than finds the entrys that arent empty and then goes into recursive
   bool confirm = false;
   if (hash != NULL)
     {
@@ -143,7 +178,14 @@ void del(Node** &hash, int size)
 	{
 	  if (hash[i] != NULL)
 	    {
+	      Node* head = hash[i];
+	      del(head, input, head, hash, size, i, confirm);
+	      
 	    }
+	}
+      if (confirm == false)
+	{
+	  cout << "No Students with ID" << endl;
 	}
     }
   else
@@ -151,7 +193,7 @@ void del(Node** &hash, int size)
       cout << "You need inputs to delete!" << endl;
     }
 }
-// get total of all gpa then divide by number of nodes
+// go through the entries and iterate through the entries to add up all the gpa values then average it out
 
 void gpaAvg(Node** &hash, int size, int count, float total)
 {
@@ -172,40 +214,35 @@ void gpaAvg(Node** &hash, int size, int count, float total)
 
 void rehash(Node** &hash, int &size)
 {
-  
+  // double size and make it into new hash
   size = size * 2;
   Node** temp = new Node*[size];
   for (int i = 0; i < size; i++)
     {
       temp[i] = NULL;
     }
+  //go through hash entries until find one not empty
   for (int i = 0; i < (size/2); i++)
     {
       if(hash[i] != NULL)
 	{
+	  //if first entry is empty then add 
 	  Node* current = hash[i];
-	  while(current != NULL)
+	  if(temp[current->getStudent()->acsii(size)] == NULL)
 	    {
-	      if(temp[current->getStudent()->acsii(size)] == NULL)
+	      cout << "BLAP" << endl;
+	      temp[current->getStudent()->acsii(size)] = current;
+	    }
+	  else
+	    {
+	      Node* endNode= temp[current->getStudent()->acsii(size)]->getNext();
+	      while( endNode->getNext() != NULL)
 		{
-		  cout << "BLAP" << endl;
-		  temp[current->getStudent()->acsii(size)] = current;
+		  endNode = endNode->getNext();
+		  
 		}
-	      else
-		{
-		  cout << "SMTHG" << endl;
-		  Node* endNode = temp[current->getStudent()->acsii(size)];
-                  cout << "HM" << endl;
-		  while (endNode->getNext() != NULL)
-		    {
-		      
-		      endNode = endNode->getNext();
-		      cout << "yey" << endl;
-		    }
-		  endNode->setNext(current);
-		  cout << "HM" << endl;
-		}
-	      current = current->getNext();
+	      endNode->setNext(current);
+		
 	    }
 	}
     }

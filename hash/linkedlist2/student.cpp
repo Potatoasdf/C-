@@ -37,12 +37,10 @@ int Student::acsii(int size)
   for(int i = 0; i < strlen(first); i++)
     {
       hashNum += int(first[i]);
-      cout << hashNum << endl;
     }
   for(int i = 0; i < strlen(last); i++)
     {
       hashNum += int(last[i]);
-      cout << hashNum << endl;
     }
   hashNum = hashNum%(size - 1);
   cout << hashNum << endl;
