@@ -23,6 +23,13 @@ void Student::getInputs()
   cin >> gpa;
   gpa = float((int)(gpa*100+0.5))/100;
 }
+void Student::returnInputs(char* newfirst, char* newlast, int newid, float newgpa)
+  {
+    first = newfirst;
+    last = newlast;
+    id = newid;
+    gpa = newgpa;
+  }
 float Student::returnGPA()
 {
   return gpa;
@@ -43,7 +50,6 @@ int Student::acsii(int size)
       hashNum += int(last[i]);
     }
   hashNum = hashNum%(size - 1);
-  cout << hashNum << endl;
   return hashNum;
 
 }

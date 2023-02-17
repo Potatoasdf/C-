@@ -1,3 +1,4 @@
+#include <vector>
 #include <fstream>
 #include <cstring>
 #include <iostream>
@@ -9,9 +10,10 @@ void print(Node** &hash, int size);
 void delExtra(Node** &hash, int size);
 void del(Node* &head, int input, Node* &temp, Node** &hash, int size, int iteration, bool &confirm);
 void gpaAvg(Node** &hash, int size, int count, float total);
-void generateRand();
+void generateRand(int &studentID, Node** &hash, int &size);
 int main() 
 {
+  int randID = 1;
   int size = 101;
   Node** hash = new Node*[size];
   for (int i = 0; i< size; i++)
@@ -70,9 +72,9 @@ int main()
 
       else if (strcmp(input, "GEN") == 0)
 	{
-ifstream input_file("blah.txt", ios::in);	  generateRand();
+	  generateRand(randID, hash, size);
 	}
-      
+       
       //if input isnt good
       else
       {
@@ -109,8 +111,9 @@ void add(Node** &hash, int &size)
     }
   cout << count << endl;
   // if hash gets to crowded rehash
-  if (count == 3)
+  if (count > 3)
     {
+      
       rehash(hash, size);
     }
 
@@ -224,7 +227,7 @@ void rehash(Node** &hash, int &size)
 {
   // double size and make it into new hash
   size = size * 2;
-  cout << size << endl;
+  
   Node** temp = new Node*[size];
   for (int i = 0; i < size; i++)
     {
@@ -246,8 +249,7 @@ void rehash(Node** &hash, int &size)
 		  current = current->getNext();
                   tempCurrent->setNext(NULL);
 		  temp[tempCurrent->getStudent()->acsii(size)] = tempCurrent;
-		  temp[tempCurrent->getStudent()->acsii(size)]->getStudent()->print();
-		}
+	        }
 	      // else go to the end of the temp entry and then add
 	      else
 		{
@@ -259,7 +261,6 @@ void rehash(Node** &hash, int &size)
 		  current = current->getNext();
                   tempCurrent->setNext(NULL);
 		  endNode->setNext(tempCurrent);
-		  endNode->getNext()->getStudent()->print();
 		
 		}
 	      
@@ -271,9 +272,78 @@ void rehash(Node** &hash, int &size)
   hash = temp;
   
 }
-void generateRand()
+void generateRand(int &studentID, Node** &hash, int &size)
 {
-  fstream txt;
-  txt.open("firstname.txt", ios::in);
   
+  int input;
+  cout << "How many student do you want to make" << endl;
+						    
+  cin >> input;
+  bool go = false;
+  char firstInput[80];
+  char lastInput[80];
+  srand(time(NULL));
+  //input file stream
+  ifstream firstname("firstname.txt");
+  ifstream lastname("lastname.txt");
+  for ( int i = 0; i < input; i++)
+    {
+      int lastrand = rand()%20;
+      cout << lastrand << endl;
+      int firstrand = rand()%20;
+      cout << firstrand << endl;
+      Student* newstudent = new Student();
+      for(int j = 0; j < 100; j++)
+	{
+	  if(firstrand == j)
+	    {
+	      firstname >> firstInput;
+	    }
+	  else if (j < firstrand)
+	    {
+	      firstname >> firstInput;
+	    }
+	  if(lastrand == j)
+	    {
+	      lastname >> lastInput;
+	    }
+	  else if (j < lastrand)
+            {
+              lastname >> lastInput;
+            }
+
+	}
+      newstudent->returnInputs(firstInput, lastInput, studentID, float(float(rand()%5 + 1) + float(rand()%100) / 100));
+      studentID++;
+      newstudent->print();
+      firstname.close();
+      lastname.close();
+      firstname.open("firstname.txt");
+      lastname.open("lastname.txt");
+      int count = 0;
+      if(hash[newstudent->acsii(size)] == NULL)
+	{
+	  hash[newstudent->acsii(size)] = new Node(newstudent);
+	}
+      else
+	{
+	  // else iterate to the end of the entry and put the newnode there
+	  count++;
+	  Node* newnode = new Node(newstudent); 
+	  Node* temp = hash[newnode->getStudent()->acsii(size)];
+	  while (temp->getNext() != NULL)
+	    {
+	      temp = temp->getNext();
+	      count++;
+	    }
+	  temp->setNext(newnode);
+	}
+      
+      // if has[[Oh gets to crowded rehash
+      if (count == 3)
+	{
+	  rehash(hash, size);
+	}
+      
+    }
 }
