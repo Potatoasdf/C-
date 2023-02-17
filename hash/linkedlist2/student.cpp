@@ -25,8 +25,8 @@ void Student::getInputs()
 }
 void Student::returnInputs(char* newfirst, char* newlast, int newid, float newgpa)
   {
-    first = newfirst;
-    last = newlast;
+    strcpy(first, newfirst);
+    strcpy(last, newlast);
     id = newid;
     gpa = newgpa;
   }

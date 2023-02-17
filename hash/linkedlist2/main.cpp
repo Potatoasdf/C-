@@ -124,7 +124,6 @@ void add(Node** &hash, int &size)
 
 void print(Node** &hash, int size)
 {
-  cout << size << endl;
   // iterates through heap to find entrys that arent empty and then iterates through the entry and prints everything in the entry
   for(int i = 0; i < size; i++)
     {
@@ -139,39 +138,50 @@ void print(Node** &hash, int size)
 	}
     }
 }
+
 // bassically copied from linkedlist2
 void del(Node* &head, int input, Node* &temp, Node** &hash, int size, int iteration, bool &confirm)
 {
+  
   //if list empty
-  if(head == NULL)
+  if (head == NULL)
     {
       cout << "you need students" << endl;
     }
-
   // first student
   else if(head->getStudent()->returnID() == input)
     {
       Node* holder = head;
       temp = head->getNext();
-      holder->~Node();
+      delete holder;
       head = temp;
       hash[iteration] = head;
       confirm = true;
+      
     }
   // del if student has id, delete student then replace with student ahead
-  else if(temp->getNext()->getStudent()->returnID() == input)
+  else if (temp->getNext() != NULL)
     {
-      Node* holder = temp->getNext()->getNext();
-      temp->getNext()->~Node();
-      temp->setNext(holder);
-      hash[iteration] = temp;
-      confirm = true;
+      if(temp->getNext()->getStudent()->returnID() == input)
+	{
+	  
+	  Node* holder = temp->getNext()->getNext();
+	  delete temp->getNext();
+	  temp->setNext(holder);
+	  hash[iteration] = temp;
+	  confirm = true;
+	}
     }
   //recurse by going to next student
-  else
+  else if (temp->getNext() != NULL)
     {
+      
       Node* holder = temp->getNext();
       del(head, input, holder, hash, size, iteration, confirm);
+    }
+  else
+    {
+      
     }
 }
 
@@ -187,7 +197,12 @@ void delExtra(Node** &hash, int size)
       cin >> input;
       for ( int i = 0; i < size; i++)
 	{
-	  if (hash[i] != NULL)
+	  if (confirm == true)
+	    {
+	      
+	    }
+	  
+	  else if (hash[i] != NULL)
 	    {
 	      Node* head = hash[i];
 	      del(head, input, head, hash, size, i, confirm);
@@ -280,12 +295,13 @@ void generateRand(int &studentID, Node** &hash, int &size)
 						    
   cin >> input;
   bool go = false;
-  char firstInput[80];
-  char lastInput[80];
+  char* firstInput = new char[80];
+  char* lastInput = new char[80];
   srand(time(NULL));
   //input file stream
   ifstream firstname("firstname.txt");
   ifstream lastname("lastname.txt");
+  // getting input number of random names
   for ( int i = 0; i < input; i++)
     {
       int lastrand = rand()%20;
@@ -313,6 +329,7 @@ void generateRand(int &studentID, Node** &hash, int &size)
             }
 
 	}
+      // putting them into students
       newstudent->returnInputs(firstInput, lastInput, studentID, float(float(rand()%5 + 1) + float(rand()%100) / 100));
       studentID++;
       newstudent->print();
@@ -320,6 +337,7 @@ void generateRand(int &studentID, Node** &hash, int &size)
       lastname.close();
       firstname.open("firstname.txt");
       lastname.open("lastname.txt");
+      //cpy from add func
       int count = 0;
       if(hash[newstudent->acsii(size)] == NULL)
 	{
@@ -339,7 +357,7 @@ void generateRand(int &studentID, Node** &hash, int &size)
 	  temp->setNext(newnode);
 	}
       
-      // if has[[Oh gets to crowded rehash
+      // if hash gets to crowded rehash
       if (count == 3)
 	{
 	  rehash(hash, size);

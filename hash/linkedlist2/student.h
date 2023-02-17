@@ -13,8 +13,8 @@ public:
   int returnID();
   int acsii(int size);
   void print();
-  char* first;
-  char* last;
+  char* first = new char[80];
+  char* last = new char[80];
   int id;
   float gpa;
   int hashNum;
