@@ -229,7 +229,7 @@ void gpaAvg(Node** &hash, int size, int count, float total)
       while (temp != NULL)
 	{
 	  total += temp->getStudent()->returnGPA();
-	  cout << total << endl;
+	  
 	  count++;
 	  temp = temp->getNext();
 	}
