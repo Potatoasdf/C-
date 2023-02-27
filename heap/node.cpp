@@ -16,11 +16,7 @@ Node::~Node() {
   left = NULL;
 }
 
-Node* Node::getNext() {
-  return next;
-}
-
-Student* Node::getNum() {
+int Node::getNum() {
   return num;
 }
 
@@ -30,4 +26,11 @@ void Node::setLeft(Node* newLeft) {
 
 void Node::setRight(Node* newRight) {
   right = newRight;
+}
+Node* Node::getLeft() {
+  return left;
+}
+
+Node* Node::getRight() {
+  return right;
 }

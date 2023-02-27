@@ -9,7 +9,8 @@ class Node {
  public:
   Node(int newNum);
   ~Node();
-  Node* getNext();
+  Node* getRight();
+  Node* getLeft();
   int getNum();
   void setRight(Node* newRight);
   void setLeft(Node* newLeft);
