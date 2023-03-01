@@ -1,42 +1,93 @@
 #include <iostream>
-#include "node.h"
+#include <cstring>
+#include <cmath>
 
 using namespace std;
 
+void print(int* heap, int layer, int index, int numCount);
+void sort(int* heap, int count, int layer);
+void sortSwitch(int* heap, int i, int layer);
 int main()
 {
-  bool alive = true;
-  while (alive)
+  int layer = 0;
+  int* heap = new int[200];
+  for (int i = 0; i < 200; i++)
     {
-      //get input
-      char input[10];
-      cout << "Enter ADD, PRINT, DELETE, or QUIT: " << endl;
-      cin >> input;
-      //if input is QUIT then stop program
-      if( strcmp(input, "QUIT") == 0)
-      {
-        alive = false;
-      }
-      //if input is ADD start void add
-      else if(strcmp(input, "ADD") == 0)
-      {
-        
-      }
-      //if input is PRINT start void print
-      else if( strcmp(input, "PRINT") == 0)
-      {
-        
-      }
-      //if input is DELETE start void delete
-      else if( strcmp(input, "DELETE") == 0)
-      {
-        
-      }
-      //if input isnt good
-      else
-      {
-        cout << "Please enter an actual input!" << endl;
-      }
+      heap[i] = 0;
     }
+  bool alive = true;
+  while(alive)
+    {
+      char input[10];
+      cout << "ADD, GEN, DEL, CLEAR, PRINT, QUIT" << endl;
+      cin >> input;
+      
+      if(strcmp(input, "ADD") == 0)
+	{
+	  int intput;
+	  cin >> intput;
+	  int count = 1;
+	  while(heap[count] != 0)
+	    {
+	      count++;
+	      cout << heap[count] << endl;
+	    }
+	  heap[count] = intput;
 
+	  if (pow(2, layer) < count)
+	    {
+	      layer++;
+	    }
+	  
+	  sort(heap, count, layer);
+	}
+      else if(strcmp(input, "PRINT") == 0)
+	{
+	  print(heap, layer, 0, 1);
+	}
+      else
+	{
+	  cout << "pls give actually input" << endl;
+	}
+    }
+  
+  return 0;
+}
+void print(int* heap, int layer, int index, int numCount)
+{
+  for(int i = 1; i < 200; i++)
+    {
+      if(heap[i] != 0)
+	{
+	  cout << heap[i] << " ";
+	}
+    }
+  
+  
+}
+void sort(int* heap, int count, int layer)
+{
+  for (int i = pow(2, layer); i <= count; i++)
+    {
+      sortSwitch(heap, i, layer);
+	
+    }
+}
+void sortSwitch(int* heap, int i, int layer)
+{
+  if(i > 1)
+    {
+      if(heap[int(round(i/2))] < heap[i])
+	{
+	  int holder = heap[i];
+	  heap[i] = heap[int(round(i/2))];
+	  heap[int(round(i/2))] = holder;
+	  
+	  sortSwitch(heap, int(round(i/2)), layer - 1);
+	}
+    }
+  else
+    {
+      
+    }
 }
