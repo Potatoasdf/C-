@@ -4,12 +4,13 @@
 
 using namespace std;
 
-void print(int* heap, int layer, int index, int numCount);
-void sort(int* heap, int count, int layer);
-void sortSwitch(int* heap, int i, int layer, int top, int last);
+void print(int* heap, int location, int space);
+void sort(int* &heap, int count);
+int layer(int count);
+
 int main()
 {
-  int layer = 0;
+  
   int* heap = new int[200];
   for (int i = 0; i < 200; i++)
     {
@@ -21,12 +22,12 @@ int main()
       char input[10];
       cout << "ADD, GEN, DEL, CLEAR, PRINT, QUIT" << endl;
       cin >> input;
-      
+      //get input and find size of heap before sorting
       if(strcmp(input, "ADD") == 0)
 	{
 	  int intput;
 	  cin >> intput;
-	  int count = 1;
+	  int count = 0;
 	  while(heap[count] != 0)
 	    {
 	      cout << heap[count] << endl;
@@ -34,17 +35,15 @@ int main()
 	      
 	    }
 	  heap[count] = intput;
-
-	  if (2*(pow(2, layer)) == count)
-	    {
-	      layer++;
-	    }
-	  
-	  sort(heap, count, layer);
+	  cout << "Count: ";
+	  cout << count << endl;
+	  cout << "Layer: ";
+	  cout << layer(count) << endl;
+	  sort(heap, count);
 	}
       else if(strcmp(input, "PRINT") == 0)
 	{
-	  print(heap, layer, 0, 1);
+	  print(heap, 0, 0);
 	}
       else
 	{
@@ -54,57 +53,55 @@ int main()
   
   return 0;
 }
-void print(int* heap, int layer, int index, int numCount)
+void sort(int* &heap, int count)
 {
-  for(int i = 0; i < 200; i++)
+  //keep recursing if count > 0
+  if(count > 0)
     {
-      if(heap[i] != 0)
-	{
-	  cout << heap[i] << " ";
-	}
-    }
-  cout << '\n';
-  
-  
-}
-void sort(int* heap, int count, int layer)
-{
-  for (int i = pow(2, layer); i <= count; i++)
-    {
-      sortSwitch(heap, i, layer, layer, i);
-	
-    }
-}
-void sortSwitch(int* heap, int i, int layer, int top, int last)
-{
-  cout << i << endl;
-  cout << "You are on layer:" << layer << endl;
-  if(layer == 1)
-    {
-      if(heap[1] < heap[i])
-	{
-	  int holder = heap[i];
-	  heap[i] = heap[1];
-	  heap[1] = holder;
+      //if parent is smaller than child than swap places
+      int holder = 0;
+      int parent = int((count-1)/2);
 
-	  print(heap, 0, 0, 0);
-	  sortSwitch(heap, last, top, top, last);
-	}
-    }
-  else if(i > 1)
-    {
-      if(heap[int(round((i-1)/2))] < heap[i])
+      if(heap[parent] < heap[count])
 	{
-	  int holder = heap[i];
-	  heap[i] = heap[int(round((i-1)/2))];
-	  heap[int(round((i-1)/2))] = holder;
-	  print(heap, 0, 0, 0);
 	  
-	  sortSwitch(heap, int(round((i-1)/2)), layer - 1, top, last);
+	  holder = heap[parent];
+	  heap[parent] = heap[count];
+	  heap[count] = holder;
+
 	}
-    }
-  else
+      //recursion
+      sort(heap, count -1);
+    }    
+}
+
+// stolen from my brothers code
+void print(int* heap, int location, int space)
+{
+  if(heap[location] == 0)
     {
-      
+      return;
     }
+  space += 10;
+
+  print(heap, location*2 + 1, space);
+
+  cout << "\n" <<endl;
+  for(int i = 10; i < space;i++)
+    {
+      cout << " ";
+    }
+  cout << heap[location] << "\n";
+  print(heap, location*2 + 2, space);
+}
+
+int layer(int count)
+{
+  int layer = 0;
+  while (count > layer)
+    {
+      layer++;
+      count = count -layer;
+    }
+  return layer;
 }
