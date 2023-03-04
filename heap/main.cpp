@@ -1,12 +1,13 @@
 #include <iostream>
 #include <cstring>
 #include <cmath>
-
+#include <fstream>
 using namespace std;
 
 void print(int* heap, int location, int space);
 void sort(int* &heap, int count);
 void del(int* &heap, int count);
+void gen(int* &heap, int &count);
 
 int layer(int count);
 
@@ -59,6 +60,14 @@ int main()
       else if(strcmp(input, "GEN") == 0)
 	{
 	  
+	  count = 0;
+          while(heap[count] != 0)
+            {
+              cout << heap[count] << endl;
+              count++;
+
+            }
+	  gen(heap, count);
 	}
       else if(strcmp(input, "DEL") == 0)
 	{
@@ -127,6 +136,37 @@ void sort(int* &heap, int count)
       //recursion
       sort(heap, count -1);
     }    
+}
+
+void gen(int* &heap, int &count)
+{
+  int input;
+  cout << "How many numbers do you want to generate?" << endl;
+  cin >> input;
+  srand(time(NULL));
+  int num;
+  ifstream nums("1-1000.txt");
+  for(int i = 0; i < input; i++)
+    {
+      int random = rand()%1000;
+      for(int j = 0; j < 1000; j++)
+	{
+	  if(random == j)
+	    {
+	      nums >> num;
+	    }
+	  else if(j < random)
+	    {
+	      nums >> num;
+      	    }
+	}
+      heap[i + count] = num;
+      sort(heap, count + i);
+      nums.close();
+      nums.open("1-1000.txt");
+    }
+  
+  
 }
 
 // stolen from my brothers code
