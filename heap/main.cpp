@@ -6,11 +6,13 @@ using namespace std;
 
 void print(int* heap, int location, int space);
 void sort(int* &heap, int count);
+void del(int* &heap, int count);
+
 int layer(int count);
 
 int main()
 {
-  
+  int count = 0;
   int* heap = new int[200];
   for (int i = 0; i < 200; i++)
     {
@@ -27,7 +29,7 @@ int main()
 	{
 	  int intput;
 	  cin >> intput;
-	  int count = 0;
+	  count = 0;
 	  while(heap[count] != 0)
 	    {
 	      cout << heap[count] << endl;
@@ -43,7 +45,47 @@ int main()
 	}
       else if(strcmp(input, "PRINT") == 0)
 	{
+	  count = 0;
+          while(heap[count] != 0)
+            {
+              cout << heap[count] << endl;
+              count++;
+	      
+            }
+
+	  sort(heap, count);
 	  print(heap, 0, 0);
+	}
+      else if(strcmp(input, "GEN") == 0)
+	{
+	  
+	}
+      else if(strcmp(input, "DEL") == 0)
+	{
+	  count = 0;
+	  while(heap[count] != 0)
+            {
+              cout << heap[count] << endl;
+              count++;
+	    }
+	  cout << "Deleting root..." << endl;
+	  del(heap, count -1);
+
+
+	}
+      else if(strcmp(input, "CLEAR") == 0)
+	{
+	  count = 0;
+          while(heap[count] != 0)
+            {
+              cout << heap[count] << endl;
+              count++;
+            }
+
+	  while(heap[0] != 0)
+	    {
+	      del(heap, count -1);
+	    }
 	}
       else
 	{
@@ -53,6 +95,14 @@ int main()
   
   return 0;
 }
+  
+void del(int* &heap, int count)
+{
+  heap[0] = heap[count];
+  heap[count] = 0;
+  sort(heap, count);
+}
+ 
 void sort(int* &heap, int count)
 {
   //keep recursing if count > 0
@@ -62,9 +112,13 @@ void sort(int* &heap, int count)
       int holder = 0;
       int parent = int((count-1)/2);
 
+      cout << "Parent: ";
+      cout << heap[parent] << endl;
+      cout << "Child: ";
+      cout << heap[count] << endl;
+
       if(heap[parent] < heap[count])
 	{
-	  
 	  holder = heap[parent];
 	  heap[parent] = heap[count];
 	  heap[count] = holder;
