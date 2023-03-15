@@ -199,14 +199,14 @@ void delExtra(Node** &hash, int size)
 	{
 	  if (confirm == true)
 	    {
-	      
+	      break;
 	    }
 	  
 	  else if (hash[i] != NULL)
 	    {
+	      cout << "HERE" << endl;
 	      Node* head = hash[i];
 	      del(head, input, head, hash, size, i, confirm);
-	      
 	    }
 	}
       if (confirm == false)
