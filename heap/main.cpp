@@ -75,7 +75,6 @@ int main()
 	}
       else if (strcmp(input, "QUIT") == 0)
 	{
-	  cout << "E" << endl;
 	  alive = false;
 	}
       else
