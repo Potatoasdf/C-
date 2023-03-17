@@ -1,0 +1,33 @@
+#include <iostream>
+#include <cstring>
+#include "node.h"
+
+using namespace std;
+
+void InfixPostfix(char* input, int i, Node* &queue, Node* &stack);
+
+int main()
+{
+  Node* queue = NULL;
+  Node* stack = NULL;
+  char* input = new char[80];
+  cin.getline(input, 80);
+  InfixPostfix(input, 0, queue, stack);
+  return 0;
+}
+
+void InfixPostfix(char* input, int i, Node* &queue, Node* &stack)
+{
+  if(isdigit(input[i]))
+    {
+      if(queue == NULL)
+	{
+	  queue = new Node(input[i]);
+	  cout << queue->getVal() << endl;
+	}
+    }
+  else
+    {
+      cout << "E" << endl;
+    }
+}
