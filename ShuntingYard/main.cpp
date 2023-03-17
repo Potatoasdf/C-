@@ -1,15 +1,21 @@
 #include <iostream>
 #include <cstring>
 #include "node.h"
+#include "treenode.h"
 
 using namespace std;
 
 void InfixPostfix(char* input, int i, Node* &queue, Node* &stack);
+void PostfixTree(treenode* &tree, Node* &stack, Node* &queue);
+
+
 void enqueue(char var, Node* &queue);
+void dequeue(Node* &queue);
 void push(char exp, Node* &head);
 Node* pop(Node* &stack);
 char peek(Node* stack);
 int order(char exp);
+
 
 int main()
 {
@@ -19,6 +25,15 @@ int main()
   cin.getline(input, 80);
   cout << strlen(input) << endl;
   InfixPostfix(input, 0, queue, stack);
+  while(queue != NULL)
+    {
+      push(peek(queue), stack);
+      dequeue(queue);
+    }
+  treenode* tree = NULL;
+  
+  PostfixTree(tree, stack, queue);
+  
   cout << "QUEUE" << endl;
   while(queue != NULL)
     {
@@ -65,9 +80,11 @@ void InfixPostfix(char* input, int i, Node* &queue, Node* &stack)
 	  else if(!isdigit(input[i]) && input[i] != ')' && peek(stack) != '(')
 	    {
 	      cout << "ORDER" << endl;
-	      while((stack->getNext() !=NULL) && order(peek(stack)) > order(input[i]) || order(peek(stack)) == order(input[i]))
+	      while(stack->getNext() != NULL && (order(peek(stack)) > order(input[i]) || order(peek(stack)) == order(input[i])))
 		{
+		  cout << "GOING" << endl;
 		  enqueue(peek(pop(stack)), queue);
+		  cout << "ENQUEUED" << endl;
 		}
 	    }
 	}
@@ -88,10 +105,23 @@ void InfixPostfix(char* input, int i, Node* &queue, Node* &stack)
       while(stack != NULL)
 	{
 	  enqueue(peek(pop(stack)), queue);
+	  cout << "B" << endl;
 	}
     }
 }
 
+void PostfixTree(treenode* &tree, Node* &stack, Node* &queue)
+{
+  cout << "E" << endl;
+}
+
+void dequeue(Node* &queue)
+{
+  Node* head = queue->getNext();
+  queue->setNext(NULL);
+  delete queue;
+  queue = head;
+}
 void enqueue(char var, Node* &queue)
 {
   cout << "ENQUEUEING: " << endl;
@@ -111,14 +141,14 @@ void enqueue(char var, Node* &queue)
 	}
       currentNode->setNext(newNode);
     }
-  cout << peek(queue) << endl;
+  cout << peek(newNode) << endl;
 }
 
 void push(char exp, Node* &head)
 {
   cout << "A" << endl;
   Node* newnode = new Node(exp);
-  //add stack to newnodes next
+  //add stack to newnodes next Node
   Node* holder = head;
   newnode->setNext(holder);
   head = newnode;
@@ -127,7 +157,7 @@ void push(char exp, Node* &head)
 
 Node* pop(Node* &stack)
 {
-  // seperate moved Node from the stack and return it
+  // seperate moved from the stack and return it
   Node* head = stack->getNext();
   Node* moved = stack;
   moved->setNext(NULL);
@@ -144,17 +174,18 @@ char peek(Node* stack)
 
 int order(char exp)
 {
+  //order of operations
   if(exp == '+' || exp == '-')
-    {
-      return 0;
-    }
-  else if(exp == '*' || exp == '/')
     {
       return 1;
     }
-  else if(exp == '^')
+  else if(exp == '*' || exp == '/')
     {
       return 2;
     }
-  return 10000;
+  else if(exp == '^')
+    {
+      return 3;
+    }
+  return 0;
 }

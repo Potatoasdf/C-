@@ -1,0 +1,34 @@
+File Edit Options Buffers Tools C++ Help
+#include <iostream>
+#include "treeNode.h"
+
+treeNode::treeNode(int input)
+{
+  var = input;
+  right = NULL;
+  left = NULL;
+}
+treeNode::~treeNode()
+{
+
+}
+treeNode* treeNode::getR()
+{
+  return right;
+}
+void treeNode::setR(treeNode* newR)
+{
+  right = newR;
+}
+treeNode* treeNode::getL()
+{
+  return left;
+}
+void treeNode::setL(treeNode* newL)
+{
+  left = newL;
+}
+char treeNode::getVar()
+{
+  return var;
+}
