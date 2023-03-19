@@ -21,17 +21,14 @@ Node* pop(Node* &stack);
 char peek(Node* stack);
 int order(char exp);
 
-void queueout(Node* queue);
-
 int main()
 {
   Node* queue = NULL;
   Node* stack = NULL;
   char* input = new char[80];
-  cout << "Give expression with only ^, *, /, +, - (no negation e.g -2) " << endl;
+  cout << "Give expression with only numbers, ^, *, /, +, and - (no negation e.g -2) " << endl;
   cin.getline(input, 80);
   InfixPostfix(input, 0, queue, stack);
-
   treenode* tree = NULL;
   treenode* child = NULL;
   PostfixTree(tree, queue);
@@ -69,12 +66,6 @@ int main()
   
 }
 
-void queueout(Node* queue)
-{
-  cout << queue->getVal() << endl;
-  queueout(queue)l
-  
-}
 void inorder(treenode* tree)
 {
   //traverse through tree
@@ -130,33 +121,23 @@ void InfixPostfix(char* input, int i, Node* &queue, Node* &stack)
   else if(input[i] != ' ')
     {
       
-      //if stack isnt null
-      if(stack != NULL)
-	{
-	  
-	  // if ) than enqueue all the expressions in between ( and )
-	  if(input[i] == ')')
+      // if ) than enqueue all the expressions in between ( and )
+      if(input[i] == ')')
+	{ 
+	  while(peek(stack) != '(')
 	    {
-	      
-	      while(peek(stack) != '(')
-		{
-		  enqueue(peek(pop(stack)), queue);
-		}
-	      pop(stack);
+	      enqueue(peek(pop(stack)), queue);
 	    }
-	  //if the current expression in the stack has a >= order of operation than the input than enqueue it into the queue
-	  else if(!isdigit(input[i]) && input[i] != ')' && peek(stack) != '(')
+	  pop(stack);
+	}
+      else
+	{
+	  //if the current var is a expression and in the stack and >= order of operation than the input than enqueue it into the queue, also if stacsk not empty and input isnt (
+	  while(stack != NULL && (order(peek(stack)) > order(input[i]) || order(peek(stack)) == order(input[i])) && input[i] != '(')
 	    {
-	      
-	      while(stack->getNext() != NULL && (order(peek(stack)) > order(input[i]) || order(peek(stack)) == order(input[i])))
-		{
-	
-		  enqueue(peek(pop(stack)), queue);
-	
-		}
+	      enqueue(peek(pop(stack)), queue); 
 	    }
 	}
-      //push if not a )
       if(input[i] != ')')
 	{
 	  push(input[i], stack);
