@@ -52,11 +52,12 @@ int main()
   return 0;
   
 }
-
+//traverse through the treenode and only cout when you cant go down an
 void postorder(treenode* tree)
 {
   if (tree != NULL)
     {
+      
       postorder(tree->getL());
       postorder(tree->getR());
       cout << tree->getVar() << " ";
@@ -122,16 +123,14 @@ void InfixPostfix(char* input, int i, Node* &queue, Node* &stack)
 	}
     }
 }
-/*
-  if 2 in vector 
- */
+
 void PostfixTree(treenode* &tree, Node* &queue)
 {
+  //vector holds stuff
   vector<treenode*> holder;
-  //holder.push_back(peek(queue));
-  //cout <<holder[0];
   while(queue != NULL)
     {
+      //if its a digit put in vector
       if(isdigit(queue->getVal()))
 	{
 	
@@ -140,6 +139,7 @@ void PostfixTree(treenode* &tree, Node* &queue)
 	}
       else
 	{
+	  //if expression than put 2 things in the vector into the l and r treenodes
 	  treenode*  newtreenode = new treenode(queue->getVal());
 	  dequeue(queue);
 	  newtreenode->setR(holder.back());
@@ -149,6 +149,7 @@ void PostfixTree(treenode* &tree, Node* &queue)
 	  holder.push_back(newtreenode);
 	}
   }
+  //make tree at top
   tree = holder[0];  
       
   
