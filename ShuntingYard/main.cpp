@@ -8,10 +8,11 @@
 using namespace std;
 
 void postorder(treenode* tree);
+void preorder(treenode* tree);
+void inorder(treenode* tree);
 
 void InfixPostfix(char* input, int i, Node* &queue, Node* &stack);
 void PostfixTree(treenode* &tree, Node* &queue);
-
 
 void enqueue(char var, Node* &queue);
 void dequeue(Node* &queue);
@@ -20,68 +21,122 @@ Node* pop(Node* &stack);
 char peek(Node* stack);
 int order(char exp);
 
+void queueout(Node* queue);
 
 int main()
 {
   Node* queue = NULL;
   Node* stack = NULL;
   char* input = new char[80];
+  cout << "Give expression with only ^, *, /, +, - (no negation e.g -2) " << endl;
   cin.getline(input, 80);
-  cout << strlen(input) << endl;
   InfixPostfix(input, 0, queue, stack);
 
   treenode* tree = NULL;
   treenode* child = NULL;
   PostfixTree(tree, queue);
-
-
-  postorder(tree);
-  cout << " " << endl;
-  cout << "QUEUE" << endl;
-  while(queue != NULL)
+  
+  bool alive = true;
+  char comm[10];
+  while (alive)
     {
-      cout << queue->getVal() << endl;
-      queue = queue->getNext();
+      cout << " " << endl;
+      cout << "type PRE, POST, IN, QUIT" << endl;
+      cin >> comm;
+      if(strcmp(comm, "PRE") == 0)
+	{
+	  preorder(tree);
+	}
+      else if(strcmp(comm, "POST") == 0)
+	{
+	  postorder(tree);
+	}
+      else if(strcmp(comm, "IN") == 0)
+	{
+	  inorder(tree);
+	}
+      else if(strcmp(comm, "QUIT") == 0)
+	{
+	  alive = false;
+	}
+      else
+	{
+	  cout << "not a possible input" << endl;
+	}
     }
-  cout << "STACK" << endl;
-  while(stack != NULL)
-    {
-      cout << peek(stack) << endl;
-      stack = stack->getNext();
-    }
+  
   return 0;
   
 }
 
+void queueout(Node* queue)
+{
+  cout << queue->getVal() << endl;
+  queueout(queue)l
+  
+}
+void inorder(treenode* tree)
+{
+  //traverse through tree
+  if(tree != NULL){
+    //when the parent is an expression put in parentheses and get its children 
+    if(!isdigit(tree->getVar()))
+      {
+	cout << "(";
+      }
+    inorder(tree->getL());
+    cout << tree->getVar();
+    inorder(tree->getR());
+    //if child dont are all numbers
+    if(!isdigit(tree->getVar()))
+      {
+	cout << ")";
+      }
+  }
+
+}
+
+//traverse through the treenode and only cout when you cant go down anymore
 void postorder(treenode* tree)
 {
   if (tree != NULL)
     {
+      
       postorder(tree->getL());
       postorder(tree->getR());
       cout << tree->getVar() << " ";
 
     }
 }
+//same as post order but you cout before traversing
+void preorder(treenode* tree){
+  if(tree != NULL){
+    cout << tree->getVar() << " ";
+    preorder(tree->getL());
+    preorder(tree->getR());
+  }
+  
+}
+
+
 void InfixPostfix(char* input, int i, Node* &queue, Node* &stack)
 {
-  //if input is a num
+  //if input is a num enqueue it
   if(isdigit(input[i]))
     {
-      cout << "Queue: " << input[i] << endl;
       enqueue(input[i], queue);
     }
+  //else if to get rid of spaces
   else if(input[i] != ' ')
     {
-      cout << "Stack: " << input[i] << endl;
+      
       //if stack isnt null
       if(stack != NULL)
 	{
-	  cout << "Prev: " << peek(stack) << endl;
+	  
 	  // if ) than enqueue all the expressions in between ( and )
 	  if(input[i] == ')')
 	    {
-	      cout << "BRACKETS" << endl;
 	      
 	      while(peek(stack) != '(')
 		{
@@ -89,15 +144,15 @@ void InfixPostfix(char* input, int i, Node* &queue, Node* &stack)
 		}
 	      pop(stack);
 	    }
-	  //if the current expression in the stack has a higher order of operation than the input than enqueue it into the queue
+	  //if the current expression in the stack has a >= order of operation than the input than enqueue it into the queue
 	  else if(!isdigit(input[i]) && input[i] != ')' && peek(stack) != '(')
 	    {
-	      cout << "ORDER" << endl;
+	      
 	      while(stack->getNext() != NULL && (order(peek(stack)) > order(input[i]) || order(peek(stack)) == order(input[i])))
 		{
-		  cout << "GOING" << endl;
+	
 		  enqueue(peek(pop(stack)), queue);
-		  cout << "ENQUEUED" << endl;
+	
 		}
 	    }
 	}
@@ -118,20 +173,17 @@ void InfixPostfix(char* input, int i, Node* &queue, Node* &stack)
       while(stack != NULL)
 	{
 	  enqueue(peek(pop(stack)), queue);
-	  cout << "B" << endl;
 	}
     }
 }
-/*
-  if 2 in vector 
- */
+
 void PostfixTree(treenode* &tree, Node* &queue)
 {
+  //vector holds stuff
   vector<treenode*> holder;
-  //holder.push_back(peek(queue));
-  //cout <<holder[0];
   while(queue != NULL)
     {
+      //if its a digit put in vector
       if(isdigit(queue->getVal()))
 	{
 	
@@ -140,6 +192,7 @@ void PostfixTree(treenode* &tree, Node* &queue)
 	}
       else
 	{
+	  //if expression than put 2 things in the vector into the l and r treenodes
 	  treenode*  newtreenode = new treenode(queue->getVal());
 	  dequeue(queue);
 	  newtreenode->setR(holder.back());
@@ -149,6 +202,7 @@ void PostfixTree(treenode* &tree, Node* &queue)
 	  holder.push_back(newtreenode);
 	}
   }
+  //make tree at top
   tree = holder[0];  
       
   
@@ -159,16 +213,17 @@ void PostfixTree(treenode* &tree, Node* &queue)
 
 void dequeue(Node* &queue)
 {
+  // go to next node in queue and delete former head
   Node* head = queue->getNext();
   queue->setNext(NULL);
   delete queue;
   queue = head;
 }
+
 void enqueue(char var, Node* &queue)
 {
-  cout << "ENQUEUEING: " << endl;
   Node* newNode = new Node(var);
-  //if empty queue
+  //if empty queue make queue newnode
   if (queue == NULL)
     {
       queue = newNode;
@@ -183,12 +238,10 @@ void enqueue(char var, Node* &queue)
 	}
       currentNode->setNext(newNode);
     }
-  cout << peek(newNode) << endl;
 }
 
 void push(char exp, Node* &head)
 {
-  cout << "A" << endl;
   Node* newnode = new Node(exp);
   //add stack to newnodes next Node
   Node* holder = head;
