@@ -1,0 +1,33 @@
+#include <iostream>
+#include "treenode.h"
+
+void print(treenode* tree, int space);
+using namespace std;
+
+int main()
+{
+  treenode tree = NULL:
+  int input = 0;
+  return 0;
+}
+
+// stolen from my brothers code
+void print(treenode* tree, int space)
+{
+  //keep adding space till empty index
+  if(tree == NULL)
+    {
+      return;
+    }
+  space += 10;
+
+  print(tree->getR(), space);
+  //print space than heap index
+  cout << "\n" <<endl;
+  for(int i = 10; i < space;i++)
+    {
+      cout << " ";
+    }
+  cout << tree->getNum() << "\n";
+  print(tree->getL(), space);
+}
