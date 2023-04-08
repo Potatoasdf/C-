@@ -14,6 +14,7 @@ class treenode
   treenode* getL();
   void setL(treenode* newL);
   int getNum();
+  void setNum(int input);
  private:
   int num;
   treenode* right;

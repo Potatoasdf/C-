@@ -9,6 +9,9 @@ treenode::treenode(int setnum)
 }
 treenode::~treenode()
 {
+  right = NULL;
+  left = NULL;
+  
 
 }
 treenode* treenode::getR()
@@ -30,4 +33,8 @@ void treenode::setL(treenode* newL)
 int treenode::getNum()
 {
   return num;
+}
+void treenode:: setNum(int input)
+{
+  num = input;
 }
