@@ -8,8 +8,8 @@ using namespace std;
 void print(treenode* tree, int space);
 void add(treenode* &tree, treenode* &head, int input);
 void search(treenode* tree, treenode* head, int input);
-void delsearch(treenode* &tree, treenode* &head, int input);
-void del(treenode* &tree, treenode* &prev, int input);
+void delsearch(treenode* &tree, treenode* &prev, int input, treenode* &head);
+void del(treenode* &tree, treenode* &prev, int input, treenode* &head);
 
 int main()
 {
@@ -26,6 +26,15 @@ int main()
 	  cin >> input;
 	  add(tree, tree, input);
 	}
+      else if(strcmp(command, "SERIES") == 0)
+	{
+	  cout << "How many numbers you want to gen: " << endl;
+	  cin >> input;
+	  for (int i = 0; i < input; i ++)
+	    {
+	      add(tree, tree, i);
+	    }
+	}
       else if(strcmp(command, "GEN") == 0)
 	{
 	  
@@ -35,14 +44,12 @@ int main()
 	    {
 	      int randint = rand() % 1000;
 	      add(tree, tree, randint);
-	    }
-
-							  
+	    }							  
 	}
       else if(strcmp(command, "DEL") == 0)
 	{
 	  cin >> input;
-	  delsearch(tree, tree, input);
+	  delsearch(tree, tree, input, tree);
 	}
       else if(strcmp(command, "PRINT") == 0)
 	{
@@ -66,7 +73,7 @@ int main()
   return 0;
 }
 
-void delsearch(treenode* &tree, treenode* &head, int input)
+void delsearch(treenode* &tree, treenode* &prev, int input, treenode* &head)
 {
   if(head == NULL)
     {
@@ -75,21 +82,19 @@ void delsearch(treenode* &tree, treenode* &head, int input)
     // if input is bigger than current int and can still go down right
   else if(tree->getR() != NULL && tree->getNum() < input)
     {
-      cout << "R" << endl;
       treenode* rightnode = tree->getR();
-      delsearch(rightnode, tree, input);
+      delsearch(rightnode, tree, input, head);
     }
   // if input is less than current int and can still go down left
   else if(tree->getL() != NULL && tree->getNum() > input)
     {
-      cout << "L" << endl;
       treenode* leftnode = tree->getL();
-      delsearch(leftnode, tree, input);
+      delsearch(leftnode, tree, input, head);
     }
   //if current int and input are equal
   else if(tree->getNum() == input)
     {
-      del(tree, head, input);
+      del(tree, prev, input, head);
     }
   //else its not in the tree
   else
@@ -97,7 +102,7 @@ void delsearch(treenode* &tree, treenode* &head, int input)
       cout << "number does not exist in the tree" << endl;
     }
 }
-void del(treenode* &tree, treenode* &prev, int input)
+void del(treenode* &tree, treenode* &prev, int input, treenode* &head)
 {
   treenode* temp = tree;
   //tree is left node of previous node
@@ -124,19 +129,18 @@ void del(treenode* &tree, treenode* &prev, int input)
       // both children
       else
 	{
-	  cout << tree->getL()->getNum() << endl;
-	  cout << "L both" << endl;
 	  //go right then go left till you cant
 	  treenode* temp = tree->getR();
-	  //temp == 95 prev == 100 tree == 90
+
 	  treenode* prevtemp = NULL;
 	  while(temp->getL() != NULL)
 	    {
 	      prevtemp = temp;
 	      temp = temp->getL();
 	    }
-	  
+	  //replace tree num with temp num
 	  tree->setNum(temp->getNum());
+	  
 	  if(prevtemp != NULL)
 	    {
 	      prevtemp->setL(NULL);
@@ -151,8 +155,8 @@ void del(treenode* &tree, treenode* &prev, int input)
       
       
     }
-  
-  if(prev->getR() == tree)
+  //if the prev nodes right chidl is tree do what was done before but with right
+  else if(prev->getR() == tree)
     {
       //no children of tree then set prev left node to null and delete tree
       if(tree->getL() == NULL && tree->getR() == NULL)
@@ -175,11 +179,9 @@ void del(treenode* &tree, treenode* &prev, int input)
       // both children
       else
         {
-          cout << tree->getL()->getNum() << endl;
-          cout << "L both" << endl;
-          //go right then go left till you cant
+         //go right then go left till you cant
           treenode* temp = tree->getR();
-          //temp == 95 prev == 100 tree == 90
+  
           treenode* prevtemp = NULL;
           while(temp->getL() != NULL)
             {
@@ -199,6 +201,56 @@ void del(treenode* &tree, treenode* &prev, int input)
           delete temp;
 	}
     }
+  //for head
+  else
+    {
+      if(head->getL() == NULL && head->getR() == NULL)
+        {
+          delete head;
+        }
+      //if tree has left node only set prev left node to tree left node and then delete tree
+      else if(head->getL() != NULL && head->getR() == NULL)
+        {
+          treenode* temp = head->getL();
+          delete head;
+          head = temp;
+        }
+      //right child only
+      else if(head->getR() != NULL && head->getL() == NULL)
+        {
+          treenode* temp = head->getR();
+          delete head;
+          head = temp;
+
+        }
+      else
+        {
+          //go right then go left till you cant
+          treenode* temp = head->getR();
+          //temp == 95 prev == 100 tree == 90
+          treenode* prevtemp = NULL;
+          while(temp->getL() != NULL)
+            {
+              prevtemp = temp;
+              temp = temp->getL();
+            }
+
+          head->setNum(temp->getNum());
+          if(prevtemp != NULL)
+            {            
+              prevtemp->setL(NULL);
+            }
+          else
+            {
+              tree->setR(NULL);
+            }
+          delete temp;
+
+        }
+
+
+    }
+
 }
 
 void search(treenode* tree, treenode* head, int input)
@@ -229,19 +281,18 @@ void search(treenode* tree, treenode* head, int input)
       cout << "number does not exist in the tree" << endl;
     }
 }
+
 void add(treenode* &tree, treenode* &head, int input)
 {
   //if empty list make new treenode with input
   treenode* newnode = new treenode(input);
   if(head == NULL)
     {
-      cout << "head" << endl;
       head = new treenode(input);
     }
   // if tree num is <= to input go down right if its not null
   else if(tree->getR() != NULL && tree->getNum() <= input)
     {
-          cout << "going R" << endl;
           treenode* temp = tree->getR();
           add(temp, head, input);
      
@@ -249,7 +300,6 @@ void add(treenode* &tree, treenode* &head, int input)
   //if input < tree num go left if its not null
   else if ( tree->getL() != NULL && tree->getNum() > input)
     {
-      cout << "going L" << endl;
       treenode* temp = tree->getL();
       add(temp, head, input);
       
@@ -258,10 +308,8 @@ void add(treenode* &tree, treenode* &head, int input)
   else
     {
       //else if right is null and input > current int set input in right leaf
-      cout << "IN" << endl;
       if(tree->getR() == NULL && tree->getNum() <= input)
         {
-          cout << "R" << endl;
           tree->setR(newnode);
         }
 
@@ -271,7 +319,6 @@ void add(treenode* &tree, treenode* &head, int input)
 	  //if left is null and current int < input set input in left leaf
 	  if(tree->getL() == NULL && tree->getNum() > input)
 	    {
-	      cout << "L" << endl;
 	      tree->setL(newnode);
 	    }
 	  
