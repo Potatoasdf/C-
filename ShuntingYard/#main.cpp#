@@ -48,14 +48,17 @@ int main()
       cin >> comm;
       if(strcmp(comm, "PRE") == 0)
 	{
+	  //prefix
 	  preorder(tree);
 	}
       else if(strcmp(comm, "POST") == 0)
 	{
+	  //postfix
 	  postorder(tree);
 	}
       else if(strcmp(comm, "IN") == 0)
 	{
+	  //infix
 	  inorder(tree);
 	}
       else if(strcmp(comm, "QUIT") == 0)
@@ -84,7 +87,7 @@ void inorder(treenode* tree)
     inorder(tree->getL());
     cout << tree->getVar();
     inorder(tree->getR());
-    //if child dont are all numbers
+    //if child dont arent all numbers
     if(!isdigit(tree->getVar()))
       {
 	cout << ")";
@@ -241,7 +244,7 @@ Node* pop(Node* &stack)
 {
   // seperate moved from the stack and return it
   Node* head = stack->getNext();
-  Node* moved = stack;
+  Node* moved = stac;k
   moved->setNext(NULL);
   stack = head;
 
