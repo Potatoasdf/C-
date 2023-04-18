@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cmath>
 #include <cstdlib>
+#include <fstream>
 using namespace std;
 
 void print(treenode* tree, int space);
@@ -30,35 +31,65 @@ int main()
 	{
 	  cout << "How many numbers you want to gen: " << endl;
 	  cin >> input;
-	  for (int i = 0; i < input; i ++)
+	  for (int i = 1; i < input + 1; i ++)
 	    {
 	      add(tree, tree, i);
 	    }
 	}
       else if(strcmp(command, "GEN") == 0)
 	{
-	  
-	  cout << "How many numbers you want to gen: " << endl;
-	  cin >> input;
-	  for (int i = 0; i < input; i++)
-	    {
-	      int randint = rand() % 1000;
-	      add(tree, tree, randint);
-	    }							  
+	  int num = 0;
+	  cout << "Getting from text..." << endl;
+	  ifstream nums("1-1000.txt");
+	   for(int i = 0; i < 1000; i++)
+	     {
+	       //go through textfile and add nums
+	       nums >> num;
+	       //add and sort
+	       add(tree, tree, num);
+
+	       
+	     }
+	   nums.close();
+	   nums.open("1-1000.txt");
+
+	
+							  
 	}
       else if(strcmp(command, "DEL") == 0)
 	{
-	  cin >> input;
-	  delsearch(tree, tree, input, tree);
+	  if(tree != NULL)
+	    {
+	      cin >> input;
+	      delsearch(tree, tree, input, tree);
+	    }
+	  else
+	    {
+	      cout << "tree is empty" << endl;
+	    }
 	}
       else if(strcmp(command, "PRINT") == 0)
 	{
-	  print(tree, 0);
+	  if(tree != NULL)
+	    {
+	      print(tree, 0);
+	    }
+	  else
+	    {
+	      cout << "tree is empty" << endl;
+	    }
 	}
       else if(strcmp(command, "SEARCH") == 0)
 	{
-	  cin >> input;
-	  search(tree, tree, input);
+	  if(tree != NULL)
+	    {
+	      cin >> input;
+	      search(tree, tree, input);
+	    }
+	  else
+	    {
+	      cout << "tree is empty" << endl;
+	    }
 	}
       else if(strcmp(command, "QUIT") == 0)
 	{
@@ -75,12 +106,8 @@ int main()
 
 void delsearch(treenode* &tree, treenode* &prev, int input, treenode* &head)
 {
-  if(head == NULL)
-    {
-      cout << "Tree is empty!" << endl;
-    }
     // if input is bigger than current int and can still go down right
-  else if(tree->getR() != NULL && tree->getNum() < input)
+  if(tree->getR() != NULL && tree->getNum() < input)
     {
       treenode* rightnode = tree->getR();
       delsearch(rightnode, tree, input, head);
