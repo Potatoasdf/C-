@@ -9,6 +9,10 @@ using namespace std;
 void print(treenode* tree, int space);
 void add(treenode* &tree, treenode* &head, int input);
 void fixtree(treenode* &node, treenode* &head);
+void LRotate(treenode* &node);
+void RRotate(treenode* &node);
+void LRRotate(treenode* &node);
+void RLRotate(treenode* &anode);
 int main()
 {
   
@@ -82,31 +86,71 @@ int main()
 }
 void fixtree(treenode* &node, treenode* & head)
 {
-  //if it is a leaf or head
-
+  
+  //case 1: black parent
   if(node->getP()->getCol() == 0)
     {
       //if parent is black it is fine
     }
-  //grandparent will always not be head
+  //red parent
   else if(node->getP()->getCol() == 1)
     {
+      //if parent is left uncle is right
       if(node->getP()->getP()->getL() == node->getP())
 	{
-	  //case 1: black uncle
+	  //case 2: red uncle
 	  if(node->getP()->getP()->getR()->getCol() == 1)
 	    {
 	      node->getP()->getP()->setCol(1);
 	      node->getP()->getP()->getL()->setCol(0);
 	      node->getP()->getP()->getR()->setCol(0);
+	      treeenode* GrandParent = node->getP()->getP();
+	      fixtree(GrandParent, head);
+	    }
+	  //case 3: black uncle
+	  else if(node->getP()->getP()->getR()->getCol() == 0 || node->getP()->getP()->getR()->getCol() == NULL)
+	    {
+	      //parent left node left
+	      if(node->getP()->getL() == node)
+		{
+		}
+	      //parent left node right
+	      else
+		{
+		}
 	      
 	    }
 	}
+      //parent right uncle left
+      else
+	{
+	}
     }
+    
   head->setCol(0);
 
   
 }
+void LRotate(treenode* &node)
+{
+  node->getL()->setP(node->getP());
+  node->getP()->setR(node->getL());
+  node->setL(node->getP());
+  node->setP(node->getP()->getP());
+  node->getP()->setP(node));
+}
+void RRotate(treenode* &node)
+{
+  node->getR()->setP(node->getP());
+  node->getP()->setL(node->getR());
+  node->setR(node->getP());
+  node->setP(node->getP()->getP());
+  node->getP()->setP(node));
+
+}
+void LRRotate(treenode* &node);
+void RLRotate(treenode* &anode);
+
 void add(treenode* &tree, treenode* &head, int input)
 {
   //if empty list make new treenode with input
