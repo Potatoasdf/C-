@@ -1,0 +1,31 @@
+#ifndef TREENODE_H
+#define TREENODE_H
+#include <iostream>
+
+using namespace std;
+
+class treenode
+{
+ public:
+  treenode(int setnum);
+  ~treenode();
+  treenode* getR();
+  void setR(treenode* newR);
+  treenode* getL();
+  void setL(treenode* newL);
+  int getNum();
+  void setNum(int input);
+  void setCol(int newcolor);
+  int getCol();
+  void setP(treenode* newP);
+  treenode* getP();
+ private:
+  int num;
+  treenode* right;
+  treenode* left;
+  treenode* parent;
+  //red = 1 black = 0
+  int color = 1;
+};
+
+#endif
