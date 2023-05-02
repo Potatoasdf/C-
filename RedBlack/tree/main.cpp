@@ -144,8 +144,8 @@ void add(treenode* &tree, treenode* &head, int input)
       else if(tree->getL() == NULL && tree->getNum() > input)
 	{
 	  tree->setL(newnode);
-	  node->setP(tree);
 	  treenode* node = tree->getL();
+	  node->setP(tree);
 	  fixtree(node, head);
 	}
     }
