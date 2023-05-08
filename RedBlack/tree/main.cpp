@@ -1,3 +1,8 @@
+/*
+  Red-Black Tree
+  By: Aidan Gao
+  Last Worked On: 5/8/2023
+ */
 #include <iostream>
 #include "treenode.h"
 #include <cstring>
@@ -41,21 +46,15 @@ int main()
 	  cout << "How many numbers you want to gen: " << endl;
 	  cin >> input;
 	  for (int i = 1; i < input + 1; i ++)
-	    {
-	      
+	    {     
 	      add(tree, tree, i);
 	      while (tree->getP() != NULL)
 		{
 		  tree = tree->getP();
 		}
-	      print(tree, 0);
-	      cout << "ITS A BARRIER" << endl;
-	      cout << "ITS A BARRIER" << endl;
-	       
 	    }
 	}
-	/*
-            else if(strcmp(command, "GEN") == 0)
+      else if(strcmp(command, "GEN") == 0)
 	{
 	  int num = 0;
 	  cout << "Getting from text..." << endl;
@@ -66,14 +65,15 @@ int main()
 	       nums >> num;
 	       
 	       //add and sort
-	       add(tree, tree, tree, num);
-
-	       
+	       add(tree, tree, num);
+	       while (tree->getP() != NULL)
+		 {
+		   tree = tree->getP();
+		 }
 	     }
 	   nums.close();
 	   nums.open("1-1000.txt");						  
 	}
-      */
       else if(strcmp(command, "PRINT") == 0)
 	{
 	  if(tree != NULL)
@@ -101,23 +101,21 @@ int main()
 void fixtree(treenode* &node, treenode* &head)
 {
   if(node == head)
-    {
-      cout <<"HERE" << endl;
+    {//if node is head than just set to black
       node->setCol(0);
     }
   //case 1: black parent
-  else if(node->getP()->getCol() == 0)
-    {
-      cout << "GOOD" << endl;
-      //if parent is black it is fine
+  else if(node->getP()->getCol() == 0 || node->getCol() == 0)
+    {//If black parent than everything is fine
+      return;
     }
-    //red parent
+  //red parent
   else if(node->getP()->getCol() == 1)
-    {//if parent is left uncle is right
-      cout << "R" << endl;
+    {
+      //if parent is left uncle is right
       if(node->getP()->getP()->getL() == node->getP())
 	{
-	  if(node->getP()->getP()->getR()->getCol() == 1)
+	  if(node->getP()->getP()->getR() != NULL && node->getP()->getP()->getR()->getCol() != 0)
 	    {
 	      //case 2: Red Uncle
               //grand parent becomes red and parent and uncle becomes black then call gparent recursivley
@@ -126,10 +124,9 @@ void fixtree(treenode* &node, treenode* &head)
               node->getP()->getP()->getR()->setCol(0);
               treenode* GrandParent = node->getP()->getP();
               fixtree(GrandParent, head);
-	      cout << "HOW" << endl;
 	    }
           //case 3: black uncle	
-	  else if(node->getP()->getP()->getR() == NULL || node->getP()->getP()->getR()->getCol() == 0)
+	  else
 	    {
 	      treenode* parent = node->getP();
 	      //parent left node right
@@ -146,49 +143,39 @@ void fixtree(treenode* &node, treenode* &head)
 	    }
 	}
       //parent right uncle left
-      else
+      else if(node->getP()->getP()->getR() == node->getP())
 	{
-	  if (node->getP()->getP()->getL()->getCol() == 1)
-            {
-              //case 2: Red Uncle
-              //grand parent becomes red and parent and uncle becomes black then call gparent recursivley
-              node->getP()->getP()->setCol(1);
+	  if (node->getP()->getP()->getL() != NULL && node->getP()->getP()->getL()->getCol() != 0)
+            {//case 2: Red Uncle, grand parent becomes red and parent and uncle becomes black then call gparent recursivley
+	      node->getP()->getP()->setCol(1);
               node->getP()->getP()->getL()->setCol(0);
               node->getP()->getP()->getR()->setCol(0);
               treenode* GrandParent = node->getP()->getP();
               fixtree(GrandParent, head);
-	      
 	    }
 	  //case 3: black uncle
-	  cout << "RL" << endl;
-	  if(node->getP()->getP()->getL() == NULL || node->getP()->getP()->getL()->getCol() == 0)
+	  else
 	    {
 	      treenode* parent = node->getP();
 	      //parent right node left
 	      if(node->getP()->getL() == node)
-		{
-		  cout << "RL" << endl;
+		{//rotate to the R and call fix tree recursivley with parent it will then probably do a RLRotation
 		  RRRotate(parent, node, head);
 		  fixtree(parent, head);
 		}
 	      //parent right node right
 	      else
 		{
-		  cout << "RR" << endl;
 		  RLRotate(parent, node, head);
 		}
 	    }
 	}
-      treenode* parent = node->getP();
-      toHead(head);
-      fixtree(parent, head);
+      if(node->getP() != NULL)
+	{//recursive for parent
+	  treenode* parent = node->getP();
+	  fixtree(parent, head);
+	}
     }
-  else
-    {
-      head->setCol(0);
-    }
-  
-  
 }
 
 void toHead(treenode* &head)
@@ -202,20 +189,21 @@ void LLRotate(treenode* &parent, treenode* &child, treenode* &head)
 {
   /*
     result:
-    
      GP     
     /						\
    P
     \
      C
-
+    /
+   x
         GP
        /  
       C    
      /
     P
+     \
+      x
    */
-      // GP is right child of P P is child of GGP and GP gets P former R child
   parent->setR(child->getL());
   child->setP(parent->getP());
   child->getP()->setL(child);
@@ -225,22 +213,23 @@ void LLRotate(treenode* &parent, treenode* &child, treenode* &head)
 }
 void LRRotate(treenode* &parent, treenode* &child, treenode* &head)
 {
-    /*				\
+  /*						\
       GP
      /						\
     P
-   /
-  C
+   / \
+  C   x
      P    
     / \
-   C   GP   
+   C   GP
+      /
+     x 
    */
   parent->getP()->setCol(1);
   parent->setCol(0);
   treenode* holder = parent->getR();
   if(parent->getP()->getP() != NULL)
     {
-      // GP is right child of P P is child of GGP and GP gets P former R child
       parent->setR(parent->getP());
       parent->setP(parent->getP()->getP());
       parent->getP()->setL(parent);
@@ -260,24 +249,25 @@ void LRRotate(treenode* &parent, treenode* &child, treenode* &head)
       parent->getR()->setL(holder);
       head = parent;
     }
-  
 }
 void RRRotate(treenode* &parent, treenode* &child, treenode* &head)
 {
     /*
     result:
-
      GP
        \                                          \
         P
        /
       C
-
+       \
+        x
       GP
         \
          C
           \
            P
+	  /
+	 x
    */
       // GP is right child of P P is child of GGP and GP gets P former R child
   parent->setL(child->getR());
@@ -285,31 +275,27 @@ void RRRotate(treenode* &parent, treenode* &child, treenode* &head)
   child->getP()->setR(child);
   parent->setP(child);
   child->setR(parent);
-
-
 }
-
 void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
 {
   /*
-        RResult:
+    RResult:
     GP
       \
        P
-        \
-         C
+      / \
+     x   C
       P
      / \
     GP  C
-
-
+     \
+      x
    */
   parent->getP()->setCol(1);
   parent->setCol(0);
   treenode* holder = parent->getL();
   if(parent->getP()->getP() != NULL)
     {
-      // GP is right child of P P is child of GGP and GP gets P former R child
       parent->setL(parent->getP());
       parent->setP(parent->getP()->getP());
       parent->getP()->setR(parent);
@@ -321,7 +307,7 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
   else
     {
       /*
-        bassically makes P the head and GP the R child of P
+        bassically makes P the head and GP the L child of P
        */
       parent->setL(parent->getP());
       parent->setP(NULL);
@@ -329,7 +315,6 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
       parent->getL()->setR(holder);
       head = parent;
     }
-
 }
 
 void add(treenode* &tree, treenode* &head, int input)
