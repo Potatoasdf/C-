@@ -162,6 +162,7 @@ void fixtree(treenode* &node, treenode* &head)
 		{//rotate to the R and call fix tree recursivley with parent it will then probably do a RLRotation
 		  RRRotate(parent, node, head);
 		  fixtree(parent, head);
+		  print(head, 0);
 		}
 	      //parent right node right
 	      else
@@ -230,13 +231,31 @@ void LRRotate(treenode* &parent, treenode* &child, treenode* &head)
   treenode* holder = parent->getR();
   if(parent->getP()->getP() != NULL)
     {
-      parent->setR(parent->getP());
-      parent->setP(parent->getP()->getP());
-      parent->getP()->setL(parent);
-      
-      parent->getR()->setP(parent);
-      parent->getR()->setL(holder);
-    }
+      if(parent->getP()->getP()->getR() == parent->getP())
+	{
+          //  GGP
+          // /   \
+          //     GP
+          parent->setR(parent->getP());
+          parent->setP(parent->getP()->getP());
+          parent->getP()->setR(parent);
+
+          parent->getR()->setP(parent);
+          parent->getR()->setL(holder);
+        }
+      else
+        {
+          //   GGP
+          //  /   \
+          // GP
+          parent->setR(parent->getP());
+          parent->setP(parent->getP()->getP());
+          parent->getP()->setL(parent);
+
+          parent->getR()->setP(parent);
+          parent->getR()->setL(holder);
+        }
+}
   //head condition
   else
     {
@@ -296,12 +315,31 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
   treenode* holder = parent->getL();
   if(parent->getP()->getP() != NULL)
     {
-      parent->setL(parent->getP());
-      parent->setP(parent->getP()->getP());
-      parent->getP()->setR(parent);
+      if(parent->getP()->getP()->getR() == parent->getP())
+	{
+	  //  GGP
+	  // /   \
+	  //     GP 
+	  parent->setL(parent->getP());
+	  parent->setP(parent->getP()->getP());
+	  parent->getP()->setR(parent);
+	  
+	  parent->getL()->setP(parent);
+	  parent->getL()->setR(holder);
+	}
+      else
+	{
+	  //   GGP
+	  //  /   \
+	  // GP
+	  parent->setL(parent->getP());
+          parent->setP(parent->getP()->getP());
+          parent->getP()->setL(parent);
 
-      parent->getL()->setP(parent);
-      parent->getL()->setR(holder);
+          parent->getL()->setP(parent);
+          parent->getL()->setR(holder);
+
+	}
     }
   //head condition
   else
