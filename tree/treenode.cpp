@@ -11,8 +11,6 @@ treenode::~treenode()
 {
   right = NULL;
   left = NULL;
-  
-
 }
 treenode* treenode::getR()
 {

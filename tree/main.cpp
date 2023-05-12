@@ -132,8 +132,12 @@ void delsearch(treenode* &tree, treenode* &prev, int input, treenode* &head)
 void del(treenode* &tree, treenode* &prev, int input, treenode* &head)
 {
   treenode* temp = tree;
+  if(head->getNum() == tree->getNum() && head->getR() == NULL && head->getL() == NULL)
+    {
+      head = NULL;
+    }
   //tree is left node of previous node
-  if(prev->getL() == tree)
+  else if(prev->getL() == tree)
     {
       //no children of tree then set prev left node to null and delete tree
       if(tree->getL() == NULL && tree->getR() == NULL)
