@@ -13,6 +13,9 @@ using namespace std;
 
 void print(treenode* tree, int space);
 void add(treenode* &tree, treenode* &head, int input);
+void search(treenode* tree, treenode* head, int input);
+void delsearch(treenode* &tree, treenode* &prev, int input, treenode* &head);
+void del(treenode* &tree, int input, treenode*& head);
 void fixtree(treenode* &node, treenode* &head);
 void LLRotate(treenode* &parent, treenode* &child, treenode* &head);
 void LRRotate(treenode* &parent, treenode* &child, treenode* &head);
@@ -29,7 +32,7 @@ int main()
   while(alive)
     {
       char command[10];
-      cout << "ADD, PRINT, DEL, GEN, SERIES, QUIT" << endl;
+      cout << "ADD, PRINT, DEL, GEN, SERIES, SEARCH, QUIT" << endl;
       cin >> command;
       if(strcmp(command, "ADD") == 0)
 	{
@@ -39,6 +42,18 @@ int main()
 	  while (tree->getP() != NULL)
 	    {
 	      tree = tree->getP();
+	    }
+	}
+      else if(strcmp(command, "DEL") == 0)
+	{
+	  if (tree != NULL)
+	    {
+	      cin >> input;
+	      delsearch(tree, tree , input, tree);
+	    }
+	  else
+	    {
+	      cout << "EMPTY TREE" << endl;
 	    }
 	}
       else if(strcmp(command, "SERIES") == 0)
@@ -53,6 +68,11 @@ int main()
 		  tree = tree->getP();
 		}
 	    }
+	}
+      else if(strcmp(command, "SEARCH") == 0)
+	{
+	  cin >> input;
+	  search(tree, tree, input);
 	}
       else if(strcmp(command, "GEN") == 0)
 	{
@@ -96,6 +116,87 @@ int main()
     }
 
   return 0;
+}
+
+void del(treenode* &tree, int input, treenode* &head)
+{
+  treenode* parent = tree->getP();
+  //head condition
+  if(tree->getR() == NULL & tree->getL() == NULL)
+    {//just head
+      if(head == tree)
+	{
+	  delete head;
+	  head = NULL;
+	}
+      delete tree;
+    }
+  else if(tree->getR() == NULL && tree->getL() != NULL)
+    {//left child
+      treenode* temp = tree->getL();
+      tree->getP()->setL(temp);
+      temp->setP(parent);
+      temp->setCol(0);
+      delete tree;
+      tree = temp;
+    }
+  else if(tree->getR() != NULL && tree->getL() == NULL)
+    {//right child
+      treenode* temp = tree->getR();
+      tree->getP()->setR(temp);
+      temp->setP(parent);
+      temp->setCol(0);
+      delete tree;
+      tree = temp;
+    }
+  else
+    {//both
+      cout << "BOTH" << endl;
+      bool check = false;
+      treenode* temp = tree->getR();
+      while(temp->getL() != NULL)
+	{
+	  temp = temp->getL();
+	  check = true;
+	}
+      tree->setNum(temp->getNum());
+      if(check)
+	{
+	  temp->getP()->setL(NULL);
+	}
+      else
+	{
+	  temp->getP()->setR(temp->getR());
+	}
+      delete temp;
+      temp = NULL;
+    }
+}
+
+void delsearch(treenode* &tree, treenode* &prev, int input, treenode* &head)
+{
+    // if input is bigger than current int and can still go down right
+  if(tree->getR() != NULL && tree->getNum() < input)
+    {
+      treenode* rightnode = tree->getR();
+      delsearch(rightnode, tree, input, head);
+    }
+  // if input is less than current int and can still go down left
+  else if(tree->getL() != NULL && tree->getNum() > input)
+    {
+      treenode* leftnode = tree->getL();
+      delsearch(leftnode, tree, input, head);
+    }
+  //if current int and input are equal
+  else if(tree->getNum() == input)
+    {
+      del(tree, input , head);
+    }
+  //else its not in the tree
+  else
+    {
+      cout << "number does not exist in the tree" << endl;
+    }
 }
 
 void fixtree(treenode* &node, treenode* &head)
@@ -428,4 +529,32 @@ void print(treenode* tree, int space)
     }
   
   print(tree->getL(), space);
+}
+void search(treenode* tree, treenode* head, int input)
+{
+  //if empty tree
+  if(head == NULL)
+    {
+      cout << "Tree is empty!" << endl;
+    }
+  // if input is bigger than current int and can still go down right
+  else if(tree->getNum() < input && tree->getR() != NULL)
+    {
+      search(tree->getR(), head, input);
+    }
+  // if input is less than current int and can still go down left
+  else if(tree->getNum() > input && tree->getL() != NULL)
+    {
+      search(tree->getL(), head, input);
+    }
+  //if current int and input are equal
+  else if(tree->getNum() == input)
+    {
+      cout << input <<" is in the tree" << endl;
+    }
+  //else its not in the tree
+  else
+    {
+      cout << "number does not exist in the tree" << endl;
+    }
 }
