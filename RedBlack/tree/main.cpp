@@ -119,7 +119,7 @@ int main()
 }
 
 void del(treenode* &tree, int input, treenode* &head)
-{
+{//prob doesnt work
   treenode* parent = tree->getP();
   //head condition
   if(tree->getR() == NULL & tree->getL() == NULL)
@@ -134,40 +134,61 @@ void del(treenode* &tree, int input, treenode* &head)
   else if(tree->getR() == NULL && tree->getL() != NULL)
     {//left child
       treenode* temp = tree->getL();
-      tree->getP()->setL(temp);
+      if(tree->getP()->getL() == parent)
+	{
+	  tree->getP()->setL(temp);
+	}
+      else
+	{
+	  tree->getP()->setR(temp);
+	}
       temp->setP(parent);
-      temp->setCol(0);
       delete tree;
       tree = temp;
+      
     }
   else if(tree->getR() != NULL && tree->getL() == NULL)
     {//right child
       treenode* temp = tree->getR();
-      tree->getP()->setR(temp);
+      if(tree->getP()->getL() == parent)
+        {
+          tree->getP()->setL(temp);
+        }
+      else
+        {
+          tree->getP()->setR(temp);
+        }
+
       temp->setP(parent);
-      temp->setCol(0);
       delete tree;
       tree = temp;
     }
   else
     {//both
-      cout << "BOTH" << endl;
+      
+      cout << tree->getNum() << endl;
       bool check = false;
+      //go right then left till you cant
       treenode* temp = tree->getR();
+      cout << temp->getP()->getR()->getR() << endl;
       while(temp->getL() != NULL)
 	{
 	  temp = temp->getL();
 	  check = true;
 	}
+      //get value
       tree->setNum(temp->getNum());
+      //detach temp 
       if(check)
 	{
 	  temp->getP()->setL(NULL);
 	}
       else
 	{
+	  
 	  temp->getP()->setR(temp->getR());
 	}
+      print(head, 0);
       delete temp;
       temp = NULL;
     }
@@ -233,12 +254,14 @@ void fixtree(treenode* &node, treenode* &head)
 	      //parent left node right
 	      if(node->getP()->getR() == node)
 		{
+		  cout << "LL" << endl;
 		  LLRotate(parent, node, head);
 		  fixtree(parent, head);
 		}
 	      //parent left node left
 	      else
 		{
+		  cout << "LR" << endl;
 		  LRRotate(parent, node, head); 
 		}
 	    }
@@ -261,13 +284,14 @@ void fixtree(treenode* &node, treenode* &head)
 	      //parent right node left
 	      if(node->getP()->getL() == node)
 		{//rotate to the R and call fix tree recursivley with parent it will then probably do a RLRotation
+		  cout << "RR" << endl;
 		  RRRotate(parent, node, head);
 		  fixtree(parent, head);
-		  print(head, 0);
 		}
 	      //parent right node right
 	      else
 		{
+		  cout << "RL" << endl;
 		  RLRotate(parent, node, head);
 		}
 	    }
@@ -355,6 +379,7 @@ void LRRotate(treenode* &parent, treenode* &child, treenode* &head)
 
           parent->getR()->setP(parent);
           parent->getR()->setL(holder);
+	  
         }
 }
   //head condition
@@ -367,6 +392,10 @@ void LRRotate(treenode* &parent, treenode* &child, treenode* &head)
       parent->setP(NULL);
       parent->getR()->setP(parent);
       parent->getR()->setL(holder);
+      if(holder != NULL)
+        {
+          holder->setP(parent->getR());
+        }
       head = parent;
     }
 }
@@ -418,6 +447,7 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
     {
       if(parent->getP()->getP()->getR() == parent->getP())
 	{
+	  cout << "E" << endl;
 	  //  GGP
 	  // /   \
 	  //     GP 
@@ -427,6 +457,7 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
 	  
 	  parent->getL()->setP(parent);
 	  parent->getL()->setR(holder);
+	  
 	}
       else
 	{
@@ -439,12 +470,12 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
 
           parent->getL()->setP(parent);
           parent->getL()->setR(holder);
-
 	}
     }
   //head condition
   else
     {
+      cout << "H" << endl;
       /*
         bassically makes P the head and GP the L child of P
        */
@@ -452,6 +483,10 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
       parent->setP(NULL);
       parent->getL()->setP(parent);
       parent->getL()->setR(holder);
+      if(holder != NULL)
+	{
+	  holder->setP(parent->getL());
+	}
       head = parent;
     }
 }
@@ -481,22 +516,21 @@ void add(treenode* &tree, treenode* &head, int input)
     }
   else
     {
+      treenode* temp = tree;
       //else if right is null and input > current int set input in right leaf
       if(tree->getR() == NULL && tree->getNum() <= input)
         {
           tree->setR(newnode);
-	  treenode* node = tree->getR();
-	  node->setP(tree);
-	  fixtree(node, head);
+	  newnode->setP(tree);
+	  fixtree(newnode, head);
         }
 
     
       else if(tree->getL() == NULL && tree->getNum() > input)
 	{
 	  tree->setL(newnode);
-	  treenode* node = tree->getL();
-	  node->setP(tree);
-	  fixtree(node, head);
+	  newnode->setP(tree);
+	  fixtree(newnode, head);
 	}
     }
 
@@ -521,11 +555,11 @@ void print(treenode* tree, int space)
   cout << tree->getNum();
   if(tree->getCol() == 0)
     {
-      cout << "B" << endl;
+      cout << "BP" << tree->getP() << endl;
     }
   else if(tree->getCol() == 1)
     {
-      cout << "R" << endl;
+      cout << "RP" << tree->getP() <<endl;
     }
   
   print(tree->getL(), space);

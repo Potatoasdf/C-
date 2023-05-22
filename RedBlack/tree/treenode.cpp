@@ -6,9 +6,11 @@ treenode::treenode(int setnum)
   num = setnum;
   right = NULL;
   left = NULL;
+  parent = NULL;
 }
 treenode::~treenode()
 {
+  parent = NULL;
   right = NULL;
   left = NULL;
   
