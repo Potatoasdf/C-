@@ -16,6 +16,8 @@ void add(treenode* &tree, treenode* &head, int input);
 void search(treenode* tree, treenode* head, int input);
 void delsearch(treenode* &tree, treenode* &prev, int input, treenode* &head);
 void del(treenode* &tree, int input, treenode*& head);
+void delfix(treenode* &tree, treenode* &head, int side);
+
 void fixtree(treenode* &node, treenode* &head);
 void LLRotate(treenode* &parent, treenode* &child, treenode* &head);
 void LRRotate(treenode* &parent, treenode* &child, treenode* &head);
@@ -114,14 +116,135 @@ int main()
 	  cout << "please use an actual command" << endl;
 	}
     }
-
+  
   return 0;
 }
+void delfix(treenode* &tree, treenode* &head, int side)
+{//tree is parent of del node, side is where del node is 1 for right 0 for left
+  //right deleted child
+  cout << "IN" << endl;
+  if(tree == head)
+    {
+      tree->setCol(0);
+    }
+  else if(side == 1)
+    {//sibling is left and child right
+      treenode* sibling = tree->getL();
+      treenode* parent = tree->getP();
+      if(sibling == NULL)
+	{//if sibling is null move up
+	  if(tree->getP()->getR() == tree)
+	    {
+	      delfix(parent, head, 1);
+	    }
+	  else
+	    {
+	      delfix(parent, head, 0);
+	    }
+	}
+      else
+	{
+	  if(tree->getL()->getCol() == 0)
+	    {//black sibling
+	      if(sibling->getL() == NULL && sibling->getR() == NULL)
+		{
+		  sibling->setCol(1);
+		  if(tree->getP()->getR() == tree)
+		    {
+		      delfix(parent, head, 1);
+		    }
+		  else
+		    {
+		      delfix(parent, head, 0);
+		    }
+		}
+	      else
+		{
+		  if(sibling->getL() != NULL && sibling->getR() == NULL)
+		    {//if child only has a lchild assume lchild is red
+		      treenode* lsibling = sibling->getL();
+		      RRRotate(sibling, lsibling, head);
+		    }
+		  if(sibling->getR() != NULL)
+		    {//two children or just a rchild
+		      treenode* rsibling = sibling->getR();
+		      RLRotate(tree, sibling, head);
+		    }
+		}
+	    }
+	  else
+	    {//red sibling assume 2 black children of children
+	      RLRotate(tree, sibling, head);
+	      delfix(tree, head, 0);
+	    }
+	    
+	}
+    }
+  //left
+  else
+    {//sibling is right and child left
+      cout << "HERE " << endl;
+      treenode* sibling = tree->getR();
+      treenode* parent = tree->getP();
+      if(sibling == NULL)
+        {//if sibling is null move up
+          if(parent->getR() == tree)
+            {
+              delfix(parent, head, 1);
+            }
+          else
+            {
+              delfix(parent, head, 0);
+            }
+        }
+      else
+        {
+          if(tree->getR()->getCol() == 0)
+            {//black sibling
+	      cout << "Y" << endl;
+              if(sibling->getL() == NULL && sibling->getR() == NULL)
+                {
+                  sibling->setCol(1);
+		  if(tree->getP()->getR() == tree)
+                    {
+                      delfix(parent, head, 1);
+                    }
+                  else
+                    {
+                      delfix(parent, head, 0);
+                    }
+                }
 
+              else
+                {
+                  if(sibling->getL() != NULL && sibling->getR() == NULL)
+                    {//if child only has a lchild assume lchild is red
+                      treenode* lsibling = sibling->getL();
+                      RLRotate(sibling, lsibling, head);
+                    }
+                  if(sibling->getR() != NULL)
+                    {//two children or just a rchild
+		      cout << "R" << endl;
+                      treenode* rsibling = sibling->getR();
+                      RLRotate(sibling, rsibling, head);
+		      //print(head, 0);
+                    }
+                }
+            }
+          else
+            {//red sibling assume 2 black children of children
+              RLRotate(tree, sibling, head);
+              delfix(tree, head, 0);
+            }
+	}
+    }
+}
 void del(treenode* &tree, int input, treenode* &head)
 {//prob doesnt work
+  int side = 2;
+  int color = tree->getCol();
   treenode* parent = tree->getP();
-  //head condition
+  //leef condition
   if(tree->getR() == NULL & tree->getL() == NULL)
     {//just head
       if(head == tree)
@@ -129,7 +252,26 @@ void del(treenode* &tree, int input, treenode* &head)
 	  delete head;
 	  head = NULL;
 	}
-      delete tree;
+      if(head != NULL)
+	{//leaf
+	  if(parent->getR() == tree)
+	    {
+	      side = 1;
+	      parent->setR(NULL);
+	    }
+	  else
+	    {
+	      parent->setL(NULL);
+	      side = 0;
+	    }
+	  delete tree;
+	  tree = NULL;
+	  if(color == 0)
+	    {
+	      cout << "LEAF" << endl;
+	      delfix(parent, head, side);
+	    }
+	}
     }
   else if(tree->getR() == NULL && tree->getL() != NULL)
     {//left child
@@ -145,7 +287,7 @@ void del(treenode* &tree, int input, treenode* &head)
       temp->setP(parent);
       delete tree;
       tree = temp;
-      
+      tree->setCol(0);
     }
   else if(tree->getR() != NULL && tree->getL() == NULL)
     {//right child
@@ -162,10 +304,10 @@ void del(treenode* &tree, int input, treenode* &head)
       temp->setP(parent);
       delete tree;
       tree = temp;
+      tree->setCol(0);
     }
   else
     {//both
-      
       cout << tree->getNum() << endl;
       bool check = false;
       //go right then left till you cant
@@ -185,13 +327,40 @@ void del(treenode* &tree, int input, treenode* &head)
 	}
       else
 	{
-	  
-	  temp->getP()->setR(temp->getR());
-	}
+	  if(temp->getR() != NULL)
+	    {
+	      temp->getP()->setR(temp->getR());
+	      temp->getP()->getR()->setCol(0);
+	    }
+	  else
+	    {
+	      cout << "E" << endl;
+	      temp->getP()->setR(NULL);
+	    }
+        }
+      color = temp->getNum();
+      parent = temp->getP();
+      
       print(head, 0);
-      delete temp;
-      temp = NULL;
-    }
+      if(parent != NULL)
+	{
+	  if(parent->getR() == temp)
+	    {
+	      side = 1;
+	    }
+	  else
+	    {
+	      side = 0;
+	    }
+	  
+	  delete temp;
+	  temp = NULL;
+	  if(color == 0 && check == true)
+	    {
+	      delfix(parent, head, side);
+	    }
+	}
+    }    
 }
 
 void delsearch(treenode* &tree, treenode* &prev, int input, treenode* &head)
@@ -443,8 +612,13 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
   parent->getP()->setCol(1);
   parent->setCol(0);
   treenode* holder = parent->getL();
+  if(holder == NULL)
+    {
+      cout << "E" << endl;
+    }
   if(parent->getP()->getP() != NULL)
     {
+      treenode* ggparent = parent->getP()->getP();
       if(parent->getP()->getP()->getR() == parent->getP())
 	{
 	  cout << "E" << endl;
@@ -452,12 +626,13 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
 	  // /   \
 	  //     GP 
 	  parent->setL(parent->getP());
-	  parent->setP(parent->getP()->getP());
+	  parent->setP(ggparent);
 	  parent->getP()->setR(parent);
 	  
 	  parent->getL()->setP(parent);
 	  parent->getL()->setR(holder);
-	  
+	  cout << parent->getP()->getNum() << endl; 
+	  cout << parent->getP()->getR()->getNum() << endl;
 	}
       else
 	{
@@ -470,6 +645,7 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
 
           parent->getL()->setP(parent);
           parent->getL()->setR(holder);
+	  
 	}
     }
   //head condition
@@ -483,12 +659,14 @@ void RLRotate(treenode* &parent, treenode* &child, treenode* &head)
       parent->setP(NULL);
       parent->getL()->setP(parent);
       parent->getL()->setR(holder);
-      if(holder != NULL)
-	{
-	  holder->setP(parent->getL());
-	}
       head = parent;
     }
+  if(holder != NULL)
+    {
+      cout <<" WAT" << endl;
+      holder->setP(parent->getL());
+    }
+
 }
 
 void add(treenode* &tree, treenode* &head, int input)
@@ -552,14 +730,13 @@ void print(treenode* tree, int space)
     {
       cout << " ";
     }
-  cout << tree->getNum();
   if(tree->getCol() == 0)
     {
-      cout << "BP" << tree->getP() << endl;
+      cout << "B" << tree->getNum() << endl;
     }
   else if(tree->getCol() == 1)
     {
-      cout << "RP" << tree->getP() <<endl;
+      cout << "R" << tree->getNum() <<endl;
     }
   
   print(tree->getL(), space);
